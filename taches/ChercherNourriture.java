@@ -1,6 +1,5 @@
 package pepisha.taches;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import pepisha.Constants;

@@ -8,8 +8,12 @@ public class Constants {
 	public static final String enemyBaseHere = "enemyBaseHere";
 	public static final String enemyTankHere = "enemyTankHere";
 	
+	// Constantes base
+	
 	public static final String baseIsAttack = "baseIsAttack";
 	
+	// Constantes explorer
+	
 	public static final String foodHere = "foodHere";
-
+	public static final String imAlive = "imAlive";
 }
