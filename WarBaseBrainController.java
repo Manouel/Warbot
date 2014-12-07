@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
+import pepisha.taches.TacheAgent;
+import pepisha.taches.creerUnite.CreerUniteRocket;
+
 import edu.turtlekit3.warbot.agents.agents.WarBase;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
@@ -13,8 +16,11 @@ import edu.turtlekit3.warbot.communications.WarMessage;
 
 public class WarBaseBrainController extends WarBaseAbstractBrainController 
 {
+	
+	
 	// Action de la base à retourner
 	private String toReturn;
+	private TacheAgent tacheCourante;//Tache courante
 	
 	//private WarAgentType lastCreateUnit = null;
 	
@@ -29,8 +35,15 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	 */
 	public WarBaseBrainController() {
 		super();
+		tacheCourante=new CreerUniteRocket(this);
 	}
 
+	/**
+	 * @action change le toReturn
+	 * */
+	public void setToReturn(String nvReturn){
+		toReturn=nvReturn;
+	}
 
 	/**
 	 * @action Définit le comportement de la base
@@ -40,21 +53,26 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	{
 		toReturn = null;
 		
-		if (isAttacked())
-			askRocketLaucherToComeBack();
+		doReflex();
 		
-		giveMyPosition();
-		
-		healMySelf();
-		
-		createUnit(WarAgentType.WarRocketLauncher);
-		
+		if(toReturn==null){
+			tacheCourante.exec();
+		}
 		if(toReturn == null)
 			toReturn = WarBase.ACTION_IDLE;
 		
 		return toReturn;
 	}
 	
+	/**
+	 * @action exécute les réflexes 
+	 * */
+	private void doReflex(){
+		if (isAttacked())
+			askRocketLaucherToComeBack();
+		giveMyPosition();
+		healMySelf();
+	}
 	
 	/**
 	 * @action Teste s'il y a des lanceurs de missiles ennemis à proximité
@@ -74,7 +92,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		}
 		
         getBrain().setDebugStringColor(Color.black);
-        getBrain().setDebugString("Tout va bien");
+        getBrain().setDebugString(tacheCourante.toString());
 		
 		return false;
 	}
@@ -107,24 +125,6 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 			toReturn = WarBase.ACTION_EAT;
 	}
 
-	
-	/**
-	 * @action Créé l'unité passée en paramètre 
-	 * @param a1 Agent à créer
-	 */
-	private void createUnit(WarAgentType a1) 
-	{
-		if(toReturn != null)
-			return;
-		
-		if(getBrain().getHealth() > MIN_HEATH_TO_CREATE)
-		{
-			getBrain().setNextAgentToCreate(a1);
-			getBrain().setDebugString("Create: "+a1.name());
-			
-			toReturn = WarBase.ACTION_CREATE;
-		}
-	}
 
 	
 	/**
@@ -142,4 +142,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 			}
 		}	
 	}
+	
+	
+	
 }
