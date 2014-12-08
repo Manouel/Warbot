@@ -137,7 +137,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		for(WarMessage msg : msgs)
 		{
 			if (msg.getMessage().equals(Constants.whereAreYou)) {
-				getBrain().setDebugString("HERE");
+				getBrain().setDebugString(Integer.toString(msg.getSenderID()));
 				getBrain().sendMessage(msg.getSenderID(), Constants.here, "");
 			}
 		}	

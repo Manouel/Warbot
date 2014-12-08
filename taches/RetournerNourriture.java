@@ -24,13 +24,12 @@ public class RetournerNourriture extends TacheAgent {
 	{
 		WarExplorerBrainController explorer = (WarExplorerBrainController) typeAgent;
 		
-		for (WarMessage m : explorer.getBrain().getMessages())
+		for (WarMessage m : typeAgent.getBrain().getMessages())
 		{
 			if(m.getSenderType().equals(WarAgentType.WarBase))
 				return m;
 		}
 		
-		explorer.getBrain().setDebugString("CHERCHE");
 		explorer.getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.whereAreYou, "");
 		return null;
 	}
@@ -58,7 +57,7 @@ public class RetournerNourriture extends TacheAgent {
 			}
 			
 			// J'envoie un message aux bases pour savoir où elles sont
-			//explorer.getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.whereAreYou, (String[]) null);
+			explorer.getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.whereAreYou, (String[]) null);
 			
 			explorer.setToReturn(MovableWarAgent.ACTION_MOVE);
 		}

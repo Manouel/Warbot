@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
+import pepisha.taches.ChercherEnnemis;
 import pepisha.taches.ChercherNourriture;
 import pepisha.taches.TacheAgent;
 import edu.turtlekit3.warbot.agents.ControllableWarAgent;
@@ -29,14 +30,34 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	// Distance de la nourriture indiquée par d'autres agents
 	private double distance = 0.0;
 	
+	// Mode de l'explorer
+	private boolean cueilleur;
+	
+	// Nombre de cueilleurs
+	private static int nbCueilleurs = 0;
+	
+	// Nombre d'espions
+	private static int nbEspions = 0;
+	
 	
 	/**
 	 * Constructeur
 	 */
 	public WarExplorerBrainController() {
 		super();
-		tacheCourante = new ChercherNourriture(this);
+		
+		if (nbCueilleurs <= nbEspions) {
+			tacheCourante = new ChercherNourriture(this);
+			nbCueilleurs++;
+			cueilleur = true;
+		}
+		else {
+			tacheCourante = new ChercherEnnemis(this);
+			nbEspions++;
+			cueilleur = false;
+		}
 	}
+	
 	
 	/**
 	 * @action change le toReturn
@@ -91,14 +112,55 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	 */
 	private void doReflex()
 	{
-		perceptEnemyBase();
+		changeComportement();
+		
+		imAlive();
+		
+		//perceptEnemyBase();
+	}
+	
+	
+	/**
+	 * @action Vérifie les messages de la base et change de comportement
+	 * 			si demandé.
+	 */
+	private void changeComportement()
+	{	
+		for (WarMessage m : getBrain().getMessages())
+		{
+			if (m.getMessage().equals("cueille")) {
+				if (!cueilleur) {
+					cueilleur = true;
+					tacheCourante = new ChercherNourriture(this);
+					nbEspions--;
+					nbCueilleurs++;
+				}
+			}
+			else if (m.getMessage().equals("chercheEnnemis")) {
+				if (cueilleur) {
+					cueilleur = false;
+					tacheCourante = new ChercherEnnemis(this);
+					nbCueilleurs--;
+					nbEspions++;
+				}
+			}
+		}
+	}
+	
+	
+	/**
+	 * @action Prévient la base que l'agent est encore vivant
+	 */
+	private void imAlive()
+	{
+		getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.imAlive, "");
 	}
 	
 	
 	/**
 	 * @action Envoie un message à sa base s'il perçoit la base ennemie
 	 */
-	private void perceptEnemyBase()
+	/*private void perceptEnemyBase()
 	{
 		ArrayList<WarPercept> basesEnnemies = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
 		
@@ -108,5 +170,5 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.enemyBaseHere, (String[]) null);
 			getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.enemyBaseHere, (String[]) null);
 		}
-	}
+	}*/
 }
