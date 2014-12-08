@@ -30,10 +30,10 @@ public class ChercherEnnemi extends TacheAgent{
 		ArrayList<WarPercept> percept = rocket.getBrain().getPerceptsEnemies();
 		if(percept != null && percept.size() > 0){
 			//je le dit aux autres
-			rocket.getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.enemyTankHere, String.valueOf(percept.get(0).getDistance()), String.valueOf(percept.get(0).getAngle()));
+			rocket.getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.ennemyHere, String.valueOf(percept.get(0).getDistance()), String.valueOf(percept.get(0).getAngle()));
 			
 			rocket.getBrain().setDebugStringColor(Color.blue);
-			rocket.getBrain().setDebugString("Ennemi en vue ! ");
+			rocket.getBrain().setDebugString("Ennemi en vue ! (mess envoyé) ");
 			AttaquerEnnemi nvTache=new AttaquerEnnemi(rocket);
 			rocket.setTacheCourante(nvTache);
 
@@ -43,11 +43,15 @@ public class ChercherEnnemi extends TacheAgent{
 			//Je regarde si y a quelqu'un qui m'a envoyé un mess comme quoi il a trouvé un ennemi
 			WarMessage m = getFormatedMessageAboutEnemyTankToKill();
 			if(m != null){
+				rocket.getBrain().setDebugStringColor(Color.blue);
+				rocket.getBrain().setDebugString("m!=null ");
 				CoordPolar p = rocket.getBrain().getIndirectPositionOfAgentWithMessage(m);
+				rocket.setDistancePointOuAller(p.getDistance());
+				rocket.setSeDirigerVersUnPoint(true);
 				rocket.getBrain().setHeading(p.getAngle());
 				rocket.setToReturn(WarRocketLauncher.ACTION_MOVE);
-				rocket.setPointOuAller(p.getDistance());//pour décrémenter : rocket.setPointOuAller(rocket.getPointOuAller-WarRocketLauncher.SPEED)
-				//IL FAUT FAIRE LA TACHE SEDIRIGERVERSUNPOINT
+				SeDirigerVers nvTache=new SeDirigerVers(rocket);
+				rocket.setTacheCourante(nvTache);
 			}
 			
 			if(rocket.getBrain().isBlocked())
@@ -66,13 +70,15 @@ public class ChercherEnnemi extends TacheAgent{
 
 	@Override
 	public String toString() {
-		return "Tache chercher ennemy";
+		return "Tache chercher ennemi";
 	}
 	
 	private WarMessage getFormatedMessageAboutEnemyTankToKill() {
 		WarRocketLauncherBrainController rocket=(WarRocketLauncherBrainController)typeAgent;
 		for (WarMessage m : rocket.getMessages()) {
-			if(m.getMessage().equals(Constants.enemyTankHere) && m.getContent() != null && m.getContent().length == 2){
+			if(m.getMessage().equals(Constants.ennemyHere) && m.getContent() != null && m.getContent().length == 2){
+				rocket.getBrain().setDebugStringColor(Color.blue);
+				rocket.getBrain().setDebugString("m about ennemy ");
 				return m;
 			}
 		}

@@ -22,14 +22,16 @@ public class AttaquerEnnemi extends TacheAgent{
 	@Override
 	public void exec() {
 		WarRocketLauncherBrainController rocket=(WarRocketLauncherBrainController)typeAgent;
-		
 		rocket.getBrain().setDebugStringColor(Color.blue);
 		rocket.getBrain().setDebugString("Ennemi en vue ! ");
 		
-		ArrayList<WarPercept> percept = rocket.getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
-		
+		//ArrayList<WarPercept> percept = rocket.getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+		ArrayList<WarPercept> percept = rocket.getBrain().getPerceptsEnemies();
 		// Je un agentType dans le percept
 		if(percept != null && percept.size() > 0){
+			rocket.getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.ennemyHere, String.valueOf(percept.get(0).getDistance()), String.valueOf(percept.get(0).getAngle()));
+			
+			//rocket.getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.ennemyHere);
 			
 			if(rocket.getBrain().isReloaded()){
 				
@@ -48,10 +50,16 @@ public class AttaquerEnnemi extends TacheAgent{
 			WarMessage m = getFormatedMessageAboutEnemyTankToKill();
 			if(m != null){
 				CoordPolar p = rocket.getBrain().getIndirectPositionOfAgentWithMessage(m);
+				rocket.setDistancePointOuAller(p.getDistance());
+				rocket.setSeDirigerVersUnPoint(true);
 				rocket.getBrain().setHeading(p.getAngle());
 				rocket.setToReturn(WarRocketLauncher.ACTION_MOVE);
+				SeDirigerVers nvTache=new SeDirigerVers(rocket);
+				rocket.setTacheCourante(nvTache);
+				
 			}
 			else{//On change de tache courante, on se met à chercher des ennemis
+				
 				ChercherEnnemi nvTache=new ChercherEnnemi(rocket);
 				rocket.setTacheCourante(nvTache);
 			}
@@ -68,7 +76,7 @@ public class AttaquerEnnemi extends TacheAgent{
 	private WarMessage getFormatedMessageAboutEnemyTankToKill() {
 		WarRocketLauncherBrainController rocket=(WarRocketLauncherBrainController)typeAgent;
 		for (WarMessage m : rocket.getMessages()) {
-			if(m.getMessage().equals(Constants.enemyTankHere) && m.getContent() != null && m.getContent().length == 2){
+			if(m.getMessage().equals(Constants.ennemyHere) && m.getContent() != null && m.getContent().length == 2){
 				return m;
 			}
 		}
