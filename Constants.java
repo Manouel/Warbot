@@ -9,8 +9,12 @@ public class Constants {
 	public static final String enemyTankHere = "enemyTankHere";
 	public static final String ennemyHere = "ennemyHere";
 	
+	// Constantes base
+	
 	public static final String baseIsAttack = "baseIsAttack";
 	
+	// Constantes explorer
+	
 	public static final String foodHere = "foodHere";
-
+	public static final String imAlive = "imAlive";
 }
