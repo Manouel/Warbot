@@ -7,6 +7,7 @@ public class Constants {
 
 	public static final String enemyBaseHere = "enemyBaseHere";
 	public static final String enemyTankHere = "enemyTankHere";
+	public static final String ennemyHere = "ennemyHere";
 	
 	// Constantes base
 	

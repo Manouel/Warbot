@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import pepisha.taches.ChercherEnnemi;
+import pepisha.taches.SeDirigerVers;
 import pepisha.taches.TacheAgent;
 import pepisha.taches.creerUnite.CreerUniteRocket;
 
@@ -24,7 +25,12 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	private String toReturn = null;
 	boolean iAbleToFireBase = false;
 	private TacheAgent tacheCourante;//Tache courante
-	private double pointOuAller=0;
+	
+	private boolean seDirigerVersPoint=false; //Si true, on se dirige vers le pt poinOuAller
+	private double distancePointOuAller;
+	
+	private boolean baseEnnemie=false; //Si on a une base ennemie connue. 
+	
 	
 
 	ArrayList<WarMessage> messages;
@@ -46,13 +52,23 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		return messages;
 	}
 	
-	public void setPointOuAller(double nvPoint){
-		pointOuAller=nvPoint;
+	public void setDistancePointOuAller(double nvPoint){
+		distancePointOuAller=nvPoint;
 	}
 	
-	public double getPointOuAller(){
-		return pointOuAller;
+	public double getDistancePointOuAller(){
+		return distancePointOuAller;
 	}
+	
+	public boolean getSeDirigerVersPoint(){
+		return seDirigerVersPoint;
+	}
+	
+	public void setSeDirigerVersUnPoint(boolean val){
+		seDirigerVersPoint=val;
+	}
+	
+
 	//Méthodes -----------------------------------------------------
 	@Override
 	public String action() {
@@ -62,6 +78,12 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		this.messages = getBrain().getMessages();
 		doReflex();
 		
+		if (getBrain().isBlocked()){
+			getBrain().setRandomHeading();
+			ChercherEnnemi nvTache=new ChercherEnnemi(this);
+			
+			this.setTacheCourante(nvTache);
+		}
 		
 		//handleMessages();
 		
@@ -82,6 +104,14 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	 * */
 	private void doReflex(){
 		recharger();
+		if(isBaseAttacked()){
+			this.getBrain().setDebugStringColor(Color.red);
+			this.getBrain().setDebugString("base is attacked !! ");
+			SeDirigerVers nvTache=new SeDirigerVers(this);
+			
+			this.setTacheCourante(nvTache);
+		}
+		
 	}
 	
 	/**
@@ -93,6 +123,41 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		}
 	}
 	
+	/**
+	 * @return true si une base alliée est attaquée et a envoyé un message signalant qu'elle a été attaquée
+	 * */
+	private boolean isBaseAttacked(){
+		for(WarMessage m : this.messages){
+			this.getBrain().setDebugStringColor(Color.red);
+			this.getBrain().setDebugString("PASSE LA!! ");
+			if(m.getMessage().equals(Constants.baseIsAttack)){
+				
+				
+				this.setDistancePointOuAller(m.getDistance());
+				getBrain().setHeading(m.getAngle());
+				
+				this.getBrain().setDebugString(" !");
+				this.setSeDirigerVersUnPoint(true);
+				return true;
+			}
+		}
+			return false;
+		
+		/*ArrayList<WarMessage> mess = getBrain().getMessages();
+		for(WarMessage m : mess){
+			this.getBrain().setDebugStringColor(Color.red);
+			this.getBrain().setDebugString("PASSE LA!! ");
+			if(m.getMessage().equals(Constants.baseIsAttack)){
+				
+				this.getBrain().setDebugString("! ");
+				this.setDistancePointOuAller(m.getDistance());
+				this.setSeDirigerVersUnPoint(true);
+				return true;
+			}
+		}
+		return false;*/
+		
+	}
 
 
 	private WarMessage getMessageAboutEnemyBase() {
