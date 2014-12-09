@@ -99,6 +99,9 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		
 		doReflex();
 		
+        getBrain().setDebugStringColor(Color.black);
+        getBrain().setDebugString(tacheCourante.toString());
+		
 		if(toReturn==null){
 			tacheCourante.exec();
 		}
@@ -136,9 +139,6 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 				return true;
 			}
 		}
-		
-        getBrain().setDebugStringColor(Color.black);
-        getBrain().setDebugString(tacheCourante.toString());
 		
 		return false;
 	}
@@ -250,8 +250,8 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 			}
 		}
 		
-       getBrain().setDebugStringColor(Color.yellow);
-       getBrain().setDebugString("");
+       //getBrain().setDebugStringColor(Color.yellow);
+       //getBrain().setDebugString("");
 		
 	}
 	

@@ -35,8 +35,7 @@ public class CreerUnite extends TacheAgent{
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Tache Creer Unite";
 	}
 	
 	
