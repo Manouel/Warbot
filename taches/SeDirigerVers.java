@@ -21,7 +21,6 @@ public class SeDirigerVers extends TacheAgent{
 
 			
 			if(rocket.getDistancePointOuAller()<=0){
-				System.out.println("SeDirigerVers : "+rocket.getDistancePointOuAller());
 				rocket.getBrain().setDebugStringColor(Color.blue);
 				rocket.getBrain().setDebugString("Je suis arrivé au point ! ");
 				rocket.setSeDirigerVersUnPoint(false);
@@ -44,7 +43,8 @@ public class SeDirigerVers extends TacheAgent{
 
 	@Override
 	public String toString() {
-		return "Tache se diriger vers";
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
