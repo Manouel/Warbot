@@ -122,9 +122,11 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	{
 		changeComportement();
 		
-		imAlive();
+		perceptEnemyBase();
 		
-		//perceptEnemyBase();
+		perceptFood();
+		
+		imAlive();
 	}
 	
 	
@@ -166,9 +168,9 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	
 	
 	/**
-	 * @action Envoie un message à sa base s'il perçoit la base ennemie
+	 * @action Envoie un message à sa base et aux rockets launcher s'il perçoit la base ennemie
 	 */
-	/*private void perceptEnemyBase()
+	private void perceptEnemyBase()
 	{
 		ArrayList<WarPercept> basesEnnemies = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
 		
@@ -178,5 +180,20 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.enemyBaseHere, (String[]) null);
 			getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.enemyBaseHere, (String[]) null);
 		}
-	}*/
+	}
+	
+	
+	/**
+	 * @action Envoie un message aux autres explorers pour avertir qu'il y a de la nourriutre
+	 */
+	private void perceptFood()
+	{
+		ArrayList<WarPercept> nourriture = getBrain().getPerceptsResources();
+		
+		if (nourriture != null && nourriture.size() > 0)
+		{
+			// On envoie un message aux autres explorer pour dire qu'il y a de la nourriture
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.foodHere, "");
+		}
+	}
 }

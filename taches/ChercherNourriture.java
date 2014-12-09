@@ -56,8 +56,6 @@ public class ChercherNourriture extends TacheAgent {
 			WarPercept lePlusProche = nourriture.get(0); // le 0 est le plus proche normalement
 			
 			if(lePlusProche.getDistance() <= ControllableWarAgent.MAX_DISTANCE_GIVE) {
-				// On envoie un message aux autres explorer pour dire qu'il y a de la nourriture
-				explorer.getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.foodHere, "");
 				explorer.setToReturn(MovableWarAgent.ACTION_TAKE);
 			} else {
 				explorer.getBrain().setHeading(lePlusProche.getAngle());
@@ -68,7 +66,7 @@ public class ChercherNourriture extends TacheAgent {
 		}
 		else 		// Pas de nourriture dans notre champ de vision
 		{
-			// Pas de message reçu
+			// Pas de message déjà reçu
 			if (explorer.getDistance() <= 0.0) {
 
 				// Je regarde si j'ai reçu un message qui dit qu'il y a de la nourriture

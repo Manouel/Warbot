@@ -19,13 +19,11 @@ public class ChercherEnnemis extends TacheAgent {
 	public void exec() {		
 		WarExplorerBrainController explorer = (WarExplorerBrainController) typeAgent;
 		
-		ArrayList<WarPercept> basesEnnemies = explorer.getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
+		ArrayList<WarPercept> ennemis = explorer.getBrain().getPerceptsEnemies();
 		
-		if (basesEnnemies != null && basesEnnemies.size() > 0) {
-			
-			// On envoie aux bases la position de la base ennemie
-			explorer.getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.enemyBaseHere, (String[]) null);
-			explorer.getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.enemyBaseHere, (String[]) null);
+		if (ennemis != null && ennemis.size() > 0) {
+			// On envoie le message aux rocket launcher
+			explorer.getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.ennemyHere, (String[]) null);
 		}
 		else {
 			explorer.getBrain().setRandomHeading(40);
