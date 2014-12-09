@@ -39,6 +39,9 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	// Nombre d'espions
 	private static int nbEspions = 0;
 	
+	// Liste de messages
+	private ArrayList<WarMessage> messages;
+	
 	
 	/**
 	 * Constructeur
@@ -58,6 +61,9 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		}
 	}
 	
+	public ArrayList<WarMessage> getListeMessages() {
+		return this.messages;
+	}
 	
 	/**
 	 * @action change le toReturn
@@ -86,6 +92,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	public String action() 
 	{	
 		toReturn = null;
+		
+		this.messages = getBrain().getMessages();
 		
 		doReflex();
 		
@@ -125,8 +133,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	 * 			si demandé.
 	 */
 	private void changeComportement()
-	{	
-		for (WarMessage m : getBrain().getMessages())
+	{
+		for (WarMessage m : messages)
 		{
 			if (m.getMessage().equals("cueille")) {
 				if (!cueilleur) {

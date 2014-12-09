@@ -26,8 +26,8 @@ public class ChercherNourriture extends TacheAgent {
 	{
 		WarExplorerBrainController explorer = (WarExplorerBrainController) typeAgent;
 		
-		for (WarMessage m : explorer.getBrain().getMessages())
-		{
+		for (WarMessage m : explorer.getListeMessages())
+		{	
 			if(m.getMessage().equals("foodHere"))
 				return m;
 		}

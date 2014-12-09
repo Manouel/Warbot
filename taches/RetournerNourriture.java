@@ -24,7 +24,7 @@ public class RetournerNourriture extends TacheAgent {
 	{
 		WarExplorerBrainController explorer = (WarExplorerBrainController) typeAgent;
 		
-		for (WarMessage m : typeAgent.getBrain().getMessages())
+		for (WarMessage m : explorer.getListeMessages())
 		{
 			if(m.getSenderType().equals(WarAgentType.WarBase))
 				return m;
@@ -52,7 +52,6 @@ public class RetournerNourriture extends TacheAgent {
 			
 			if (m != null)
 			{
-				explorer.getBrain().setDebugString("MERCI");
 				explorer.getBrain().setHeading(m.getAngle());
 			}
 			

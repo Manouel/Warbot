@@ -23,7 +23,7 @@ public class CreerUniteRocket extends CreerUnite{
 		{
 			base.getBrain().setNextAgentToCreate(WarAgentType.WarRocketLauncher);
 			base.getBrain().setDebugString("Création d'un War Rocket");
-			base.setToReturn(WarBase.ACTION_CREATE);
+			base.setToReturn(WarBase.ACTION_CREATE);		
 		}
 	}
 
