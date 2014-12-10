@@ -9,6 +9,7 @@ import edu.turtlekit3.warbot.agents.ControllableWarAgent;
 import edu.turtlekit3.warbot.agents.MovableWarAgent;
 import edu.turtlekit3.warbot.agents.agents.WarEngineer;
 import edu.turtlekit3.warbot.agents.agents.WarExplorer;
+import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarEngineerAbstractBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
@@ -82,6 +83,16 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 		if (toReturn == null) {
 			getFood();
 		}
+		
+		imAlive();
+	}
+	
+	/**
+	 * @action Prévient la base que l'agent est encore vivant
+	 */
+	private void imAlive()
+	{
+		getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.imAlive, "");
 	}
 	
 	private void eatFood()
