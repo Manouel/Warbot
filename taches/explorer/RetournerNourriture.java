@@ -39,10 +39,6 @@ public class RetournerNourriture extends TacheAgent {
 	public void exec() {
 		WarExplorerBrainController explorer = (WarExplorerBrainController) typeAgent;
 		
-		if(explorer.getBrain().isBlocked())
-			explorer.getBrain().setRandomHeading();
-		
-		
 		// On récupère la liste des bases alliées qui sont dans les environs
 		ArrayList<WarPercept> bases = explorer.getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
 		

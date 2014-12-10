@@ -54,6 +54,9 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 		
 		this.messages = getBrain().getMessages();
 		
+		if (getBrain().isBlocked())
+			getBrain().setRandomHeading();
+		
 		doReflex();
 		
 		getBrain().setDebugStringColor(Color.black);
@@ -62,10 +65,7 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 		if(toReturn == null)
 			tacheCourante.exec();
 
-		if(toReturn == null) {
-			if (getBrain().isBlocked())
-				getBrain().setRandomHeading();
-	
+		if(toReturn == null) {	
 			return WarExplorer.ACTION_MOVE;
 		} 
 

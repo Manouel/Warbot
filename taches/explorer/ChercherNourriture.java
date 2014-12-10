@@ -45,9 +45,6 @@ public class ChercherNourriture extends TacheAgent {
 			explorer.setTacheCourante(new RetournerNourriture(typeAgent));
 			return;
 		}
-
-		if (explorer.getBrain().isBlocked())
-			explorer.getBrain().setRandomHeading();
 			
 		ArrayList<WarPercept> nourriture = explorer.getBrain().getPerceptsResources();
 		

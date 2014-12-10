@@ -50,6 +50,9 @@ public class WarKamikazeBrainController extends WarKamikazeAbstractBrainControll
 		
 		this.messages = getBrain().getMessages();
 		
+		if (getBrain().isBlocked())
+			getBrain().setRandomHeading();
+		
 		doReflex();
 		
 		getBrain().setDebugStringColor(Color.black);
@@ -58,10 +61,7 @@ public class WarKamikazeBrainController extends WarKamikazeAbstractBrainControll
 		if(toReturn == null)
 			tacheCourante.exec();
 
-		if(toReturn == null) {
-			if (getBrain().isBlocked())
-				getBrain().setRandomHeading();
-	
+		if(toReturn == null) {	
 			return WarExplorer.ACTION_MOVE;
 		} 
 
