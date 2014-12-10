@@ -8,6 +8,11 @@ import pepisha.taches.TacheAgent;
 
 public class CreerUnite extends TacheAgent{
 	
+	
+	// Energie minimum pour créer un nouvel agent
+	private static final int MIN_HEATH_TO_CREATE = (int) (WarBase.MAX_HEALTH * 0.8);
+	
+	
 	public CreerUnite(WarBrainController b){
 		super((WarBaseBrainController)b);
 	}
@@ -15,7 +20,7 @@ public class CreerUnite extends TacheAgent{
 	@Override
 	public void exec() {
 		WarBaseBrainController base=(WarBaseBrainController)typeAgent;
-		if(base.getBrain().getHealth()>base.getMIN_HEATH_TO_CREATE())
+		if(base.getBrain().getHealth()>MIN_HEATH_TO_CREATE)
 		{
 			if(base.getNbRocketLauncher()<base.getNbMinRocket()){
 				base.getBrain().setNextAgentToCreate(WarAgentType.WarRocketLauncher);

@@ -34,9 +34,6 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	
 	//private WarAgentType lastCreateUnit = null;
 	
-	// Energie minimum pour créer un nouvel agent
-	private static final int MIN_HEATH_TO_CREATE = (int) (WarBase.MAX_HEALTH * 0.8);
-	
 	private static final double RAYON_PERCEPTION_ENNEMIS = 150;
 	
 	//Nombre minimal d'agents de chaque type :
@@ -72,10 +69,6 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	
 	public int getNbMinExplorer(){
 		return nbMinExplorer;
-	}
-	
-	public int getMIN_HEATH_TO_CREATE(){
-		return MIN_HEATH_TO_CREATE;
 	}
 	
 	public int getNbExplorer(){

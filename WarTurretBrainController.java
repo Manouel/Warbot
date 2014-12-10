@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import pepisha.taches.TacheAgent;
+import pepisha.taches.turrets.Attaquer;
 import edu.turtlekit3.warbot.agents.agents.WarExplorer;
+import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.agents.WarTurret;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarTurretAbstractBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
@@ -23,7 +25,7 @@ public class WarTurretBrainController extends WarTurretAbstractBrainController {
 	
 	public WarTurretBrainController() {
 		super();
-		//tacheCourante = new ...;
+		tacheCourante = new Attaquer(this);
 	}
 	
 	
@@ -70,6 +72,16 @@ public class WarTurretBrainController extends WarTurretAbstractBrainController {
 	 */
 	private void doReflex()
 	{
-
+		recharger();
+	}
+	
+	
+	/**
+	 * @action recharge 
+	 * */
+	private void recharger(){
+		if(!getBrain().isReloaded() && !getBrain().isReloading()){
+			toReturn = WarTurret.ACTION_RELOAD;
+		}
 	}
 }
