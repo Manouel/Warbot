@@ -39,10 +39,12 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	//Nombre minimal d'agents de chaque type :
 	private static int nbMinRocket = 2;
 	private static int nbMinExplorer = 10;
+	private static int nbMinEngineer=2;
 	
 	
 	private Map<Integer,Integer> explorers;
 	private Map<Integer,Integer> rocketLaunchers;
+	private Map<Integer, Integer> engineers;
 	
 	/**
 	 * Constructeur
@@ -52,6 +54,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		tacheCourante=new CreerUnite(this);
 		explorers=new HashMap<Integer,Integer>();
 		rocketLaunchers=new HashMap<Integer,Integer>();
+		engineers=new HashMap<Integer,Integer>();
 	}
 
 	//Accesseurs -------------------------------------------------------------
@@ -69,6 +72,14 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	
 	public int getNbMinExplorer(){
 		return nbMinExplorer;
+	}
+	
+	public int getNbMinEngineer(){
+		return nbMinEngineer;
+	}
+	
+	public int getNbEngineer(){
+		return engineers.size();
 	}
 	
 	public int getNbExplorer(){
@@ -203,6 +214,13 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 			rocketLaunchers.put(cle,rocketLaunchers.get(cle)-1);
 		}
 		
+		//Engineers ---------------------------------------
+		listeCles = engineers.keySet();
+		//Je décrémente tout
+		for(Integer cle : listeCles){
+			engineers.put(cle,engineers.get(cle)-1);
+		}
+		
 		for(WarMessage msg : messages){
 			if(msg.getMessage().equals(Constants.imAlive)){
 				if(msg.getSenderType().equals(WarAgentType.WarExplorer)){
@@ -211,8 +229,12 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 				if(msg.getSenderType().equals(WarAgentType.WarRocketLauncher)){
 					rocketLaunchers.put(msg.getSenderID(), 3);
 				}
+				if(msg.getSenderType().equals(WarAgentType.WarEngineer)){
+					engineers.put(msg.getSenderID(), 3);
+				}
 			}
 		}
+		
 		
 		verifierAgentsMorts();
 	}
@@ -241,11 +263,18 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 			if(rocketLaunchers.get(cle)<=0){
 				it.remove();
 			}
+		}	
+		
+		//Engineers ----------------------------------
+		it=engineers.keySet().iterator();
+		while (it.hasNext()){
+			Integer cle = (Integer) it.next();
+			
+			if(engineers.get(cle)<=0){
+				it.remove();
+			}
 		}
-		
-       //getBrain().setDebugStringColor(Color.yellow);
-       //getBrain().setDebugString("");
-		
+
 	}
 	
 	

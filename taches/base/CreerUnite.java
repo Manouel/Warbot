@@ -25,6 +25,9 @@ public class CreerUnite extends TacheAgent{
 			if(base.getNbRocketLauncher()<base.getNbMinRocket()){
 				base.getBrain().setNextAgentToCreate(WarAgentType.WarRocketLauncher);
 			}
+			else if(base.getNbEngineer()<base.getNbMinEngineer()){
+				base.getBrain().setNextAgentToCreate(WarAgentType.WarEngineer);
+			}
 			else if(base.getNbExplorer()<base.getNbMinExplorer()){
 				base.getBrain().setNextAgentToCreate(WarAgentType.WarExplorer);
 
