@@ -30,6 +30,10 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	
 	private boolean baseEnnemie=false; //Si on a une base ennemie connue. 
 	
+	private static final double rayonAttaqueBaseEnnemie = 500;
+	private static final double rayonDefenseBase = 500;
+	
+	private static final double rayonAttaqueEnnemi = 400;//Rayon dans lequel on attaque les ennemis
 	
 
 	ArrayList<WarMessage> messages;
@@ -67,6 +71,18 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		seDirigerVersPoint=val;
 	}
 	
+	public double getRayonAttaqueEnnemi(){
+		return rayonAttaqueEnnemi;
+	}
+	
+	public double getRayonAttaqueBaseEnnemie(){
+		return rayonAttaqueBaseEnnemie;
+	}
+	
+	public double getRayonDefenseBase(){
+		return rayonDefenseBase;
+	}
+	
 
 	//Méthodes -----------------------------------------------------
 	@Override
@@ -84,7 +100,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			this.setTacheCourante(nvTache);
 		}
 		
-		//handleMessages();
+		this.getBrain().setDebugString(tacheCourante.toString());
 		
 		if(toReturn==null){//Exécution de la tache courante
 			tacheCourante.exec();
@@ -102,13 +118,14 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	 * @action exécute les réflexes 
 	 * */
 	private void doReflex(){
+		imAlive();
 		recharger();
-		if(isBaseAttacked()){
-			this.getBrain().setDebugStringColor(Color.red);
-			this.getBrain().setDebugString("base is attacked !! ");
-			SeDirigerVers nvTache=new SeDirigerVers(this);
-			
-			this.setTacheCourante(nvTache);
+		double distance =isBaseAttacked() ;
+		if(distance!=0 && distance<=rayonDefenseBase){
+				this.setSeDirigerVersUnPoint(true);
+				this.setDistancePointOuAller(distance);
+				SeDirigerVers nvTache=new SeDirigerVers(this);
+				this.setTacheCourante(nvTache);
 		}
 		
 	}
@@ -125,22 +142,16 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	/**
 	 * @return true si une base alliée est attaquée et a envoyé un message signalant qu'elle a été attaquée
 	 * */
-	private boolean isBaseAttacked(){
+	private double isBaseAttacked(){
 		for(WarMessage m : this.messages){
-			this.getBrain().setDebugStringColor(Color.red);
-			this.getBrain().setDebugString("PASSE LA!! ");
-			if(m.getMessage().equals(Constants.baseIsAttack)){
-				
-				
+			if(m.getMessage().equals(Constants.baseIsAttack)){	
 				this.setDistancePointOuAller(m.getDistance());
-				getBrain().setHeading(m.getAngle());
 				
-				this.getBrain().setDebugString(" !");
-				this.setSeDirigerVersUnPoint(true);
-				return true;
+
+				return m.getDistance();
 			}
 		}
-			return false;
+			return 0;
 		
 		/*ArrayList<WarMessage> mess = getBrain().getMessages();
 		for(WarMessage m : mess){
@@ -167,6 +178,14 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		return null;
 	}
 
+	
+	/**
+	 * @action Prévient la base que l'agent est encore vivant
+	 */
+	private void imAlive()
+	{
+		getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.imAlive, "");
+	}
 //	private void handleMessages() {
 //		for (WarMessage m : this.messages) {
 //			if(m.getSenderType().equals(WarAgentType.WarKamikaze) && m.getMessage().equals(WarKamikazeBrainController.I_Exist))
