@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
-import pepisha.taches.ChercherEnnemis;
-import pepisha.taches.ChercherNourriture;
 import pepisha.taches.TacheAgent;
+import pepisha.taches.explorer.ChercherEnnemis;
+import pepisha.taches.explorer.ChercherNourriture;
 import edu.turtlekit3.warbot.agents.ControllableWarAgent;
 import edu.turtlekit3.warbot.agents.MovableWarAgent;
 import edu.turtlekit3.warbot.agents.agents.WarBase;

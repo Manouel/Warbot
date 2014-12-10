@@ -1,10 +1,11 @@
-package pepisha.taches;
+package pepisha.taches.explorer;
 
 import java.awt.Color;
 import java.util.ArrayList;
 
 import pepisha.Constants;
 import pepisha.WarExplorerBrainController;
+import pepisha.taches.TacheAgent;
 import edu.turtlekit3.warbot.agents.MovableWarAgent;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
