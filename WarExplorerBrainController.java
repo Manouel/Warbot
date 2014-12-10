@@ -176,9 +176,11 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		
 		if (basesEnnemies != null && basesEnnemies.size() > 0)
 		{	
+			WarPercept base = basesEnnemies.get(0);
+			
 			// On envoie aux bases la position de la base ennemie
-			getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.enemyBaseHere, (String[]) null);
-			getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.enemyBaseHere, (String[]) null);
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.enemyBaseHere, String.valueOf(base.getDistance()), String.valueOf(base.getAngle()));
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.enemyBaseHere, String.valueOf(base.getDistance()), String.valueOf(base.getAngle()));
 		}
 	}
 	
@@ -192,8 +194,11 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		
 		if (nourriture != null && nourriture.size() > 0)
 		{
+			WarPercept food = nourriture.get(0);
+			
 			// On envoie un message aux autres explorer pour dire qu'il y a de la nourriture
-			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.foodHere, "");
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.foodHere,
+					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
 		}
 	}
 }

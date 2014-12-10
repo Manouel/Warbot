@@ -11,6 +11,7 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.WarBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
+import edu.turtlekit3.warbot.tools.CoordPolar;
 
 public class ChercherNourriture extends TacheAgent {
 
@@ -71,8 +72,10 @@ public class ChercherNourriture extends TacheAgent {
 				WarMessage food = getMessageAboutFood();
 				
 				if (food != null) {
-					explorer.setDistance(food.getDistance());
-					explorer.getBrain().setHeading(food.getAngle());
+					CoordPolar p = explorer.getBrain().getIndirectPositionOfAgentWithMessage(food);
+					
+					explorer.setDistance(p.getDistance());
+					explorer.getBrain().setHeading(p.getAngle());
 				}
 				else {
 					explorer.getBrain().setRandomHeading(20);

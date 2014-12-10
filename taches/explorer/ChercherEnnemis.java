@@ -23,8 +23,11 @@ public class ChercherEnnemis extends TacheAgent {
 		ArrayList<WarPercept> ennemis = explorer.getBrain().getPerceptsEnemies();
 		
 		if (ennemis != null && ennemis.size() > 0) {
+			WarPercept ennemi = ennemis.get(0);
+			
 			// On envoie le message aux rocket launcher
-			explorer.getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.ennemyHere, (String[]) null);
+			explorer.getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.ennemyHere,
+					String.valueOf(ennemi.getDistance()), String.valueOf(ennemi.getAngle()));
 		}
 		else {
 			explorer.getBrain().setRandomHeading(40);
