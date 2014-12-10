@@ -1,4 +1,4 @@
-package pepisha.taches.creerUnite;
+package pepisha.taches.base;
 
 import edu.turtlekit3.warbot.agents.agents.WarBase;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;

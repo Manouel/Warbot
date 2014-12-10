@@ -1,10 +1,11 @@
-package pepisha.taches;
+package pepisha.taches.rocketLauncher;
 
 import java.awt.Color;
 import java.util.ArrayList;
 
 import pepisha.Constants;
 import pepisha.WarRocketLauncherBrainController;
+import pepisha.taches.TacheAgent;
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
