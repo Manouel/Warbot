@@ -24,15 +24,14 @@ public class CreerUnite extends TacheAgent{
 		{
 			if(base.getNbRocketLauncher()<base.getNbMinRocket()){
 				base.getBrain().setNextAgentToCreate(WarAgentType.WarRocketLauncher);
-				base.getBrain().setDebugString("Création d'un Rocket Launcher");
 			}
 			else if(base.getNbExplorer()<base.getNbMinExplorer()){
 				base.getBrain().setNextAgentToCreate(WarAgentType.WarExplorer);
-				base.getBrain().setDebugString("Création d'un Explorer");
 
 			}
 			else{ //Sinon, par défaut on fait des rocketLaunchers
-				
+				base.getBrain().setNextAgentToCreate(WarAgentType.WarRocketLauncher);
+				base.getBrain().setDebugString("Création d'un Rocket Launcher");
 			}
 			base.setToReturn(WarBase.ACTION_CREATE);
 		}

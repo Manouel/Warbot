@@ -19,19 +19,13 @@ public class SeDirigerVers extends TacheAgent{
 		// TODO Auto-generated method stub
 		WarRocketLauncherBrainController rocket=(WarRocketLauncherBrainController)typeAgent;
 		if(rocket.getSeDirigerVersPoint()){
-
-			
 			if(rocket.getDistancePointOuAller()<=0){
-				rocket.getBrain().setDebugStringColor(Color.blue);
-				rocket.getBrain().setDebugString("Je suis arrivé au point ! ");
 				rocket.setSeDirigerVersUnPoint(false);
 				AttaquerEnnemi nvTache=new AttaquerEnnemi(rocket);
 				rocket.setTacheCourante(nvTache);
 			}else{
 				rocket.setDistancePointOuAller(
-						rocket.getDistancePointOuAller()-WarRocketLauncher.SPEED);
-				rocket.getBrain().setDebugStringColor(Color.blue);
-				rocket.getBrain().setDebugString("Je me dirige vers un point ! ");
+				rocket.getDistancePointOuAller()-WarRocketLauncher.SPEED);
 				rocket.setToReturn(WarRocketLauncher.ACTION_MOVE);
 			}
 		}
