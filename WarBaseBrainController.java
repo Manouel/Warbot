@@ -21,6 +21,7 @@ import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.agents.resources.WarFood;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
+import edu.turtlekit3.warbot.tools.CoordPolar;
 
 public class WarBaseBrainController extends WarBaseAbstractBrainController 
 {
@@ -38,6 +39,8 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	private Map<Integer, Integer> engineers;
 	private Map<Integer,Integer> kamikazes;
 	
+	//Liste des bases ennemies
+	private ArrayList<CoordPolar> basesEnnemies;
 	
 	
 	
@@ -201,6 +204,39 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 			}
 		}	
 	}
+	
+	/**
+	 * @action regarde la base a reçu un message avec la position d'une base ennemie 
+	 * et la garde en memoire
+	 * */
+	public void getMessageAboutEnemyBaseHere(){
+		for(WarMessage msg : messages){
+			if(msg.getMessage().equals(Constants.enemyBaseHere)){
+				CoordPolar pMess = getBrain().getIndirectPositionOfAgentWithMessage(msg);
+				if(basesEnnemies.get(basesEnnemies.indexOf(pMess))!=null){
+					
+					if(!(pMess.equals(basesEnnemies.get(basesEnnemies.indexOf(pMess))))){
+						basesEnnemies.add(basesEnnemies.size(), pMess);
+					}
+				}
+				else{
+					basesEnnemies.add(basesEnnemies.size(), pMess);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @action envoie un message aux agents si on a au moins une base ennemie connue
+	 * */
+	public void sendMessageAboutEnemyBasePosition(){
+		if(basesEnnemies.size()>0){
+			
+			getBrain().broadcastMessageToAll(Constants.enemyBaseHere,
+					String.valueOf(basesEnnemies.get(0).getAngle()), String.valueOf(basesEnnemies.get(0).getDistance()));
+		}
+	}
+
 	
 	/**
 	 * @action vérifie dans ses messages si elle a un message disant qu'un agent est en vie.
