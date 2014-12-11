@@ -88,9 +88,9 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		
 		if (getBrain().isBlocked()){
 			getBrain().setRandomHeading();
-			ChercherEnnemi nvTache=new ChercherEnnemi(this);
+			//ChercherEnnemi nvTache=new ChercherEnnemi(this);
 			
-			this.setTacheCourante(nvTache);
+			//this.setTacheCourante(nvTache);
 		}
 		
 		this.getBrain().setDebugString(tacheCourante.toString());
@@ -99,8 +99,8 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			tacheCourante.exec();
 		}
 		if(toReturn == null){
-			if (getBrain().isBlocked())
-				getBrain().setRandomHeading();
+			//if (getBrain().isBlocked())
+			//	getBrain().setRandomHeading();
 			toReturn = WarRocketLauncher.ACTION_MOVE;
 		}
 		

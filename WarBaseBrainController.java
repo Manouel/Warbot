@@ -118,10 +118,9 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	 * @action exécute les réflexes 
 	 * */
 	private void doReflex(){
-		WarPercept p = isAttacked();
-		
-		if (p != null)
-			askRocketLaucherToComeBack(p);
+	
+		if (isAttacked())
+			askRocketLaucherToComeBack();
 		
 		giveMyPosition();
 		healMySelf();
@@ -133,44 +132,56 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	
 	/**
 	 * @action Teste s'il y a des lanceurs de missiles ennemis à proximité
-	 * @return Percept si ennemis, null sinon
+	 * @return true si la base est attaquée
 	 */
-	private WarPercept isAttacked()
+	private boolean isAttacked()
 	{
 		ArrayList<WarPercept> rockets = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
-		
-		for (WarPercept p : rockets) {
-            getBrain().setDebugStringColor(Color.orange);
-            getBrain().setDebugString("Je suis attaqué !!");
-			return p;
-		}
-		
 		ArrayList<WarPercept> tourelles = getBrain().getPerceptsEnemiesByType(WarAgentType.WarTurret);
 		
-		for (WarPercept p : tourelles) {
-            getBrain().setDebugStringColor(Color.orange);
-            getBrain().setDebugString("Je suis attaqué !!");
-			return p;
-		}
+		return ((rockets != null && rockets.size() > 0)
+				|| (tourelles != null && tourelles.size() > 0));
 		
-		return null;
+//		for (WarPercept p : rockets) {
+//            getBrain().setDebugStringColor(Color.orange);
+//            getBrain().setDebugString("Je suis attaqué !!");
+//			return p;
+//		}
+		
+//		for (WarPercept p : tourelles) {
+//            getBrain().setDebugStringColor(Color.orange);
+//            getBrain().setDebugString("Je suis attaqué !!");
+//			return p;
+//		}
+		
+//		return null;
 	}
 	
 	
 	/**
 	 * @action Demande à l'ensemble des lanceurs de missiles
 	 * 			de revenir à la base.
-	 * @param p Point auquel les lanceurs de missiles doivent revenir.
 	 */
-	private void askRocketLaucherToComeBack(WarPercept p)
+	private void askRocketLaucherToComeBack()
 	{
-        getBrain().setDebugStringColor(Color.orange);
-        getBrain().setDebugString("Je suis attaqué !! (mess envoyé)");
-        
-        if (p != null) {
+		ArrayList<WarPercept> rockets = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+		ArrayList<WarPercept> tourelles = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+		
+		if (rockets != null && rockets.size() > 0){
+			WarPercept p = rockets.get(0);
+			
         	getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, 
-												Constants.baseIsAttack, String.valueOf(p.getDistance()), String.valueOf(p.getAngle()));
-        }
+					Constants.baseIsAttack, String.valueOf(p.getDistance()), String.valueOf(p.getAngle()));
+		}
+		else if (tourelles != null && tourelles.size() > 0){
+			WarPercept p = tourelles.get(0);
+			
+        	getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, 
+					Constants.baseIsAttack, String.valueOf(p.getDistance()), String.valueOf(p.getAngle()));
+		}
+		
+//		getBrain().setDebugStringColor(Color.orange);
+//        getBrain().setDebugString("Je suis attaqué !! (mess envoyé)");
 	}
 
 	

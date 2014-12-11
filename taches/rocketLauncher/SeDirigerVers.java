@@ -32,6 +32,7 @@ public class SeDirigerVers extends TacheAgent{
 		else{
 			ChercherEnnemi nvTache=new ChercherEnnemi(rocket);
 			rocket.setTacheCourante(nvTache);
+			rocket.setToReturn(WarRocketLauncher.ACTION_MOVE);
 		}
 		
 	}
