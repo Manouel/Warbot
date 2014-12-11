@@ -38,20 +38,8 @@ public class ChercherEnnemi extends TacheAgent{
 
 		}
 		else{
-			//Je regarde d'abord si j'ai reçu un message comme quoi y a une base à attaquer dans mon rayon d'attaque
-			WarMessage m = getMessageAboutEnemyBaseAttacked();
-			if(m!= null){
-				CoordPolar p = rocket.getBrain().getIndirectPositionOfAgentWithMessage(m);
-				rocket.setDistancePointOuAller(p.getDistance());
-				rocket.setSeDirigerVersUnPoint(true);
-				rocket.getBrain().setHeading(p.getAngle());
-				rocket.setToReturn(WarRocketLauncher.ACTION_MOVE);
-				SeDirigerVers nvTache=new SeDirigerVers(rocket);
-				rocket.setTacheCourante(nvTache);
-			}
-			else{
 			//Je regarde si y a quelqu'un qui m'a envoyé un mess comme quoi il a trouvé un ennemi
-				m = getFormatedMessageAboutEnemyTankToKill();
+				WarMessage m = getFormatedMessageAboutEnemyTankToKill();
 				if(m != null){
 					CoordPolar p = rocket.getBrain().getIndirectPositionOfAgentWithMessage(m);
 					rocket.setDistancePointOuAller(p.getDistance());
@@ -60,7 +48,6 @@ public class ChercherEnnemi extends TacheAgent{
 					rocket.setToReturn(WarRocketLauncher.ACTION_MOVE);
 					SeDirigerVers nvTache=new SeDirigerVers(rocket);
 					rocket.setTacheCourante(nvTache);
-				}
 			}
 			
 			if(rocket.getBrain().isBlocked())
