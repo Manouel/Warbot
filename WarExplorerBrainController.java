@@ -49,7 +49,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	public WarExplorerBrainController() {
 		super();
 		
-		if (nbCueilleurs <= nbEspions) {
+		// Si le nb de cueilleurs < min OU inférieur à 70% du nb d'explorers total
+		if (nbCueilleurs < WarBaseBrainController.nbMinExplorer || nbCueilleurs < ((nbEspions+nbCueilleurs) * 0.7)) {
 			tacheCourante = new ChercherNourriture(this);
 			nbCueilleurs++;
 			cueilleur = true;
