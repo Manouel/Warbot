@@ -48,7 +48,6 @@ public class AttaquerEnnemi extends TacheAgent{
 				rocket.setToReturn(WarRocketLauncher.ACTION_FIRE);
 			}else{
 				//si je suis pas trop pres de l'enemy je m'approche
-				
 				if(percept.get(0).getDistance() > WarRocket.EXPLOSION_RADIUS + 1)
 					rocket.setToReturn(WarRocketLauncher.ACTION_MOVE);
 				else

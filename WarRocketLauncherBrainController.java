@@ -158,7 +158,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		WarMessage m = getMessageAboutEnemyBase();
 		if(m!= null && m.getDistance()<=rayonAttaqueBaseEnnemie){
 			CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
-			setDistancePointOuAller(p.getDistance());
+			setDistancePointOuAller(p.getDistance()-WarRocketLauncher.DISTANCE_OF_VIEW);
 			setSeDirigerVersUnPoint(true);
 			getBrain().setHeading(p.getAngle());
 			setToReturn(WarRocketLauncher.ACTION_MOVE);

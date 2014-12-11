@@ -42,7 +42,7 @@ public class ChercherEnnemi extends TacheAgent{
 				WarMessage m = getFormatedMessageAboutEnemyTankToKill();
 				if(m != null){
 					CoordPolar p = rocket.getBrain().getIndirectPositionOfAgentWithMessage(m);
-					rocket.setDistancePointOuAller(p.getDistance());
+					rocket.setDistancePointOuAller(p.getDistance()-WarRocketLauncher.DISTANCE_OF_VIEW);
 					rocket.setSeDirigerVersUnPoint(true);
 					rocket.getBrain().setHeading(p.getAngle());
 					rocket.setToReturn(WarRocketLauncher.ACTION_MOVE);
