@@ -8,6 +8,7 @@ import pepisha.taches.kamikazes.SeSuicider;
 import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.agents.agents.WarKamikaze;
 import edu.turtlekit3.warbot.agents.agents.WarTurret;
+import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarKamikazeAbstractBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
@@ -82,10 +83,18 @@ public class WarKamikazeBrainController extends WarKamikazeAbstractBrainControll
 	private void doReflex()
 	{
 		recharger();
-		
 		seDefendre();
-		
+		imAlive();
 		vie = getBrain().getHealth();
+	}
+	
+	//Reflexes -----------------------------------------------------------------------
+	/**
+	 * @action Prévient la base que l'agent est encore vivant
+	 */
+	private void imAlive()
+	{
+		getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.imAlive, "");
 	}
 	
 	/**
