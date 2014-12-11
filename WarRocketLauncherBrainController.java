@@ -2,37 +2,29 @@ package pepisha;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Random;
 
 import pepisha.taches.TacheAgent;
 import pepisha.taches.rocketLauncher.ChercherEnnemi;
 import pepisha.taches.rocketLauncher.SeDirigerVers;
 
-import edu.turtlekit3.warbot.agents.MovableWarAgent;
-import edu.turtlekit3.warbot.agents.agents.WarBase;
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
-import edu.turtlekit3.warbot.agents.percepts.WarPercept;
-import edu.turtlekit3.warbot.agents.projectiles.WarRocket;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarRocketLauncherAbstractBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
-import edu.turtlekit3.warbot.teams.demo.WarKamikazeBrainController;
 import edu.turtlekit3.warbot.tools.CoordPolar;
 
 public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractBrainController {
 
+	//Attributs ----------------------------------------------------------------------------
+	
 	private String toReturn = null;
-	boolean iAbleToFireBase = false;
 	private TacheAgent tacheCourante;//Tache courante
 	
 	private boolean seDirigerVersPoint=false; //Si true, on se dirige vers le pt poinOuAller
 	private double distancePointOuAller;
 	
-	private boolean baseEnnemie=false; //Si on a une base ennemie connue. 
-	
 	private static final double rayonAttaqueBaseEnnemie = 500;
 	private static final double rayonDefenseBase = 500;
-	
 	private static final double rayonAttaqueEnnemi = 400;//Rayon dans lequel on attaque les ennemis
 	
 
@@ -43,7 +35,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		tacheCourante=new ChercherEnnemi(this);
 	}
 	
-	//Accesseurs ------------------------------------------------------
+	//Accesseurs ----------------------------------------------------------------
 	public void setToReturn(String nvReturn){
 		toReturn=nvReturn;
 	}
@@ -84,7 +76,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 	
 
-	//Méthodes -----------------------------------------------------
+	//Méthodes ---------------------------------------------------------------------------
 	@Override
 	public String action() {
 		// Develop behaviour here
@@ -120,15 +112,12 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	private void doReflex(){
 		imAlive();
 		recharger();
-		double distance =isBaseAttacked() ;
-		if(distance!=0 && distance<=rayonDefenseBase){
-				this.setSeDirigerVersUnPoint(true);
-				this.setDistancePointOuAller(distance);
-				SeDirigerVers nvTache=new SeDirigerVers(this);
-				this.setTacheCourante(nvTache);
-		}
-		
+		isBaseAttacked() ;
+		attackEnemyBase();
 	}
+	
+	
+	//Reflexes -----------------------------------------------------------------------------------
 	
 	/**
 	 * @action recharge 
@@ -142,34 +131,42 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	/**
 	 * @return true si une base alliée est attaquée et a envoyé un message signalant qu'elle a été attaquée
 	 * */
-	private double isBaseAttacked(){
+	private void isBaseAttacked(){
 		for(WarMessage m : this.messages){
 			if(m.getMessage().equals(Constants.baseIsAttack)){	
-				this.setDistancePointOuAller(m.getDistance());
-				
-
-				return m.getDistance();
+				CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
+				if(p.getDistance()!=0 && p.getDistance()<=rayonDefenseBase){
+					getBrain().setDebugStringColor(Color.red);
+					this.setDistancePointOuAller(p.getAngle());
+					this.setSeDirigerVersUnPoint(true);
+					this.getBrain().setHeading(p.getAngle());
+					SeDirigerVers nvTache=new SeDirigerVers(this);
+					this.setTacheCourante(nvTache);
+				}
 			}
-		}
-			return 0;
-		
-		/*ArrayList<WarMessage> mess = getBrain().getMessages();
-		for(WarMessage m : mess){
-			this.getBrain().setDebugStringColor(Color.red);
-			this.getBrain().setDebugString("PASSE LA!! ");
-			if(m.getMessage().equals(Constants.baseIsAttack)){
-				
-				this.getBrain().setDebugString("! ");
-				this.setDistancePointOuAller(m.getDistance());
-				this.setSeDirigerVersUnPoint(true);
-				return true;
-			}
-		}
-		return false;*/
-		
+		}		
 	}
 
-
+	/**
+	 * @action regarde si il faut attaquer la base ennemmie 
+	 * (si on a un message à propose de la base ennemie et qu'elle est dans le rayon d'attaque)
+	 * */
+	private void attackEnemyBase(){
+		WarMessage m = getMessageAboutEnemyBase();
+		if(m!= null && m.getDistance()<=rayonAttaqueBaseEnnemie){
+			CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
+			setDistancePointOuAller(p.getDistance());
+			setSeDirigerVersUnPoint(true);
+			getBrain().setHeading(p.getAngle());
+			setToReturn(WarRocketLauncher.ACTION_MOVE);
+			SeDirigerVers nvTache=new SeDirigerVers(this);
+			setTacheCourante(nvTache);
+		}
+	}
+	
+	/**
+	 * @return un message disant que l'on a la position de la base ennemie
+	 * */
 	private WarMessage getMessageAboutEnemyBase() {
 		for (WarMessage m : this.messages) {
 			if(m.getMessage().equals(Constants.enemyBaseHere))
@@ -186,10 +183,5 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	{
 		getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.imAlive, "");
 	}
-//	private void handleMessages() {
-//		for (WarMessage m : this.messages) {
-//			if(m.getSenderType().equals(WarAgentType.WarKamikaze) && m.getMessage().equals(WarKamikazeBrainController.I_Exist))
-//				this.iAbleToFireBase = true;
-//		}
-//	}
+	
 }
