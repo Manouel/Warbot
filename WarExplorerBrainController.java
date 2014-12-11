@@ -180,8 +180,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			WarPercept base = basesEnnemies.get(0);
 			
 			// On envoie aux bases la position de la base ennemie
-			getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.enemyBaseHere, String.valueOf(base.getDistance()), String.valueOf(base.getAngle()));
-			getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.enemyBaseHere, String.valueOf(base.getDistance()), String.valueOf(base.getAngle()));
+			getBrain().broadcastMessageToAll(Constants.enemyBaseHere, String.valueOf(base.getDistance()), String.valueOf(base.getAngle()));
 		}
 	}
 	

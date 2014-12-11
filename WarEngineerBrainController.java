@@ -84,6 +84,8 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 			getFood();
 		}
 		
+		perceptEnemyBase();
+		
 		imAlive();
 	}
 	
@@ -125,6 +127,18 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 		else
 		{
 			wiggle();
+		}
+	}
+	
+	private void perceptEnemyBase()
+	{
+		ArrayList<WarPercept> bases = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
+		
+		if (bases != null && bases.size() > 0){
+			WarPercept base = bases.get(0);
+			
+			// On envoie aux bases la position de la base ennemie
+			getBrain().broadcastMessageToAll(Constants.enemyBaseHere, String.valueOf(base.getDistance()), String.valueOf(base.getAngle()));
 		}
 	}
 }
