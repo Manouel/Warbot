@@ -75,15 +75,4 @@ public class ChercherEnnemi extends TacheAgent{
 		}
 		return null;
 	}
-	
-	private WarMessage getMessageAboutEnemyBaseAttacked(){
-		WarRocketLauncherBrainController rocket=(WarRocketLauncherBrainController)typeAgent;
-		for(WarMessage m : rocket.getMessages()){
-			//Si le message parle de la base et que je suis assez près 
-			if(m.getMessage().equals(Constants.enemyBaseHere) && m.getDistance()<=rocket.getRayonAttaqueBaseEnnemie()){
-				return m;
-			}
-		}
-		return null;
-	}
 }
