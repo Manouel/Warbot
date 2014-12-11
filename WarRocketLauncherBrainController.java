@@ -9,6 +9,7 @@ import pepisha.taches.rocketLauncher.SeDirigerVers;
 
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
+import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarRocketLauncherAbstractBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
 import edu.turtlekit3.warbot.tools.CoordPolar;
@@ -114,6 +115,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		recharger();
 		isBaseAttacked() ;
 		attackEnemyBase();
+		perceptFood();
 	}
 	
 	
@@ -182,6 +184,23 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	private void imAlive()
 	{
 		getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.imAlive, "");
+	}
+	
+	/**
+	 * @action prévient les explorers que y a de la nourriture ici
+	 * */
+	private void perceptFood(){
+		
+		ArrayList<WarPercept> nourriture = getBrain().getPerceptsResources();
+		
+		if (nourriture != null && nourriture.size() > 0)
+		{
+			WarPercept food = nourriture.get(0);
+			
+			// On envoie un message aux autres explorer pour dire qu'il y a de la nourriture
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.foodHere,
+					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
+		}
 	}
 	
 }

@@ -86,6 +86,7 @@ public class WarKamikazeBrainController extends WarKamikazeAbstractBrainControll
 		seDefendre();
 		imAlive();
 		vie = getBrain().getHealth();
+		perceptFood();
 	}
 	
 	//Reflexes -----------------------------------------------------------------------
@@ -125,5 +126,22 @@ public class WarKamikazeBrainController extends WarKamikazeAbstractBrainControll
 				setToReturn(WarKamikaze.ACTION_FIRE);
 			}
 		}	
+	}
+	
+	/**
+	 * @action prévient les explorers que y a de la nourriture ici
+	 * */
+	private void perceptFood(){
+		
+		ArrayList<WarPercept> nourriture = getBrain().getPerceptsResources();
+		
+		if (nourriture != null && nourriture.size() > 0)
+		{
+			WarPercept food = nourriture.get(0);
+			
+			// On envoie un message aux autres explorer pour dire qu'il y a de la nourriture
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.foodHere,
+					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
+		}
 	}
 }

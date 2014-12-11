@@ -8,6 +8,8 @@ import pepisha.taches.turrets.Attaquer;
 import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.agents.WarTurret;
+import edu.turtlekit3.warbot.agents.enums.WarAgentType;
+import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarTurretAbstractBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
 
@@ -73,8 +75,27 @@ public class WarTurretBrainController extends WarTurretAbstractBrainController {
 	private void doReflex()
 	{
 		recharger();
+		perceptFood();
 	}
 	
+	//Reflexes -------------------------------------------------------------------------
+	
+	/**
+	 * @action prévient les explorers que y a de la nourriture ici
+	 * */
+	private void perceptFood(){
+		
+		ArrayList<WarPercept> nourriture = getBrain().getPerceptsResources();
+		
+		if (nourriture != null && nourriture.size() > 0)
+		{
+			WarPercept food = nourriture.get(0);
+			
+			// On envoie un message aux autres explorer pour dire qu'il y a de la nourriture
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.foodHere,
+					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
+		}
+	}
 	
 	/**
 	 * @action recharge 
