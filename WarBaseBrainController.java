@@ -55,6 +55,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		rocketLaunchers=new HashMap<Integer,Integer>();
 		engineers=new HashMap<Integer,Integer>();
 		kamikazes=new HashMap<Integer,Integer>();
+		basesEnnemies=new ArrayList<CoordPolar>();
 	}
 
 	//Accesseurs -------------------------------------------------------------
@@ -125,6 +126,8 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		giveMyPosition();
 		healMySelf();
 		verifierListesAgents();
+		getMessageAboutEnemyBaseHere();
+		sendMessageAboutEnemyBasePosition();
 		
 	}
 	
@@ -212,10 +215,17 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	public void getMessageAboutEnemyBaseHere(){
 		for(WarMessage msg : messages){
 			if(msg.getMessage().equals(Constants.enemyBaseHere)){
+				
 				CoordPolar pMess = getBrain().getIndirectPositionOfAgentWithMessage(msg);
-				if(basesEnnemies.get(basesEnnemies.indexOf(pMess))!=null){
-					
-					if(!(pMess.equals(basesEnnemies.get(basesEnnemies.indexOf(pMess))))){
+				int i= basesEnnemies.indexOf(pMess);
+				if(i!=-1){
+					if(basesEnnemies.get(i)!=null){
+						
+						if(!(pMess.equals(basesEnnemies.get(i)))){
+							basesEnnemies.add(basesEnnemies.size(), pMess);
+						}
+					}
+					else{
 						basesEnnemies.add(basesEnnemies.size(), pMess);
 					}
 				}
@@ -234,7 +244,9 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 			
 			getBrain().broadcastMessageToAll(Constants.enemyBaseHere,
 					String.valueOf(basesEnnemies.get(0).getAngle()), String.valueOf(basesEnnemies.get(0).getDistance()));
+	
 		}
+		
 	}
 
 	
