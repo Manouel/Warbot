@@ -12,6 +12,7 @@ import java.util.Set;
 
 
 
+
 import pepisha.taches.TacheAgent;
 import pepisha.taches.base.CreerUnite;
 import edu.turtlekit3.warbot.agents.agents.WarBase;
@@ -30,11 +31,6 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	private TacheAgent tacheCourante;//Tache courante
 	
 	private ArrayList<WarMessage> messages;
-	
-	
-	//private WarAgentType lastCreateUnit = null;
-	
-	private static final double RAYON_PERCEPTION_ENNEMIS = 150;
 	
 	//Nombre minimal d'agents de chaque type :
 	private static int nbMinRocket = 2;
@@ -119,8 +115,11 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	 * @action exécute les réflexes 
 	 * */
 	private void doReflex(){
-		if (isAttacked())
-			askRocketLaucherToComeBack();
+		WarPercept p = isAttacked();
+		
+		if (p != null)
+			askRocketLaucherToComeBack(p);
+		
 		giveMyPosition();
 		healMySelf();
 		verifierListesAgents();
@@ -129,35 +128,44 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	
 	/**
 	 * @action Teste s'il y a des lanceurs de missiles ennemis à proximité
-	 * @return Vrai si un rocket launcher perçu, faux sinon
+	 * @return Percept si ennemis, null sinon
 	 */
-	private boolean isAttacked()
+	private WarPercept isAttacked()
 	{
-		ArrayList<WarPercept> ennemies = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+		ArrayList<WarPercept> rockets = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
 		
-		for (WarPercept p : ennemies) {
-			if (p.getDistance() <= RAYON_PERCEPTION_ENNEMIS)
-			{
-                getBrain().setDebugStringColor(Color.orange);
-                getBrain().setDebugString("Je suis attaqué !!");
-				return true;
-			}
+		for (WarPercept p : rockets) {
+            getBrain().setDebugStringColor(Color.orange);
+            getBrain().setDebugString("Je suis attaqué !!");
+			return p;
 		}
 		
-		return false;
+		ArrayList<WarPercept> tourelles = getBrain().getPerceptsEnemiesByType(WarAgentType.WarTurret);
+		
+		for (WarPercept p : tourelles) {
+            getBrain().setDebugStringColor(Color.orange);
+            getBrain().setDebugString("Je suis attaqué !!");
+			return p;
+		}
+		
+		return null;
 	}
 	
 	
 	/**
 	 * @action Demande à l'ensemble des lanceurs de missiles
 	 * 			de revenir à la base.
+	 * @param p Point auquel les lanceurs de missiles doivent revenir.
 	 */
-	private void askRocketLaucherToComeBack()
+	private void askRocketLaucherToComeBack(WarPercept p)
 	{
         getBrain().setDebugStringColor(Color.orange);
         getBrain().setDebugString("Je suis attaqué !! (mess envoyé)");
-		getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, 
-												Constants.baseIsAttack, "");
+        
+        if (p != null) {
+        	getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, 
+												Constants.baseIsAttack, String.valueOf(p.getDistance()), String.valueOf(p.getAngle()));
+        }
 	}
 
 	
@@ -276,7 +284,5 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		}
 
 	}
-	
-	
-	
 }
+
