@@ -30,7 +30,7 @@ public class ChercherEnnemis extends TacheAgent {
 					String.valueOf(ennemi.getDistance()), String.valueOf(ennemi.getAngle()));
 		}
 		else {
-			explorer.getBrain().setRandomHeading(40);
+			explorer.getBrain().setRandomHeading(10);
 		}
 		
 		explorer.setToReturn(MovableWarAgent.ACTION_MOVE);

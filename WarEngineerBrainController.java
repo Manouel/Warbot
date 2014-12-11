@@ -104,11 +104,11 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 	
 	private void wiggle()
 	{
-		getBrain().setRandomHeading(20);
+		getBrain().setRandomHeading(10);
 	}
 	
 	private void getFood()
-	{	
+	{
 		ArrayList<WarPercept> nourriture = getBrain().getPerceptsResources();
 		
 		// Si il y a de la nourriture dans notre champ de vision

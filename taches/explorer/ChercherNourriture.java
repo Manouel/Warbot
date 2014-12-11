@@ -78,7 +78,7 @@ public class ChercherNourriture extends TacheAgent {
 					explorer.getBrain().setHeading(p.getAngle());
 				}
 				else {
-					explorer.getBrain().setRandomHeading(20);
+					explorer.getBrain().setRandomHeading(10);
 				}
 			}
 			else {
