@@ -36,18 +36,20 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	private static final int nbMinRocket = 5;
 	public static final int nbMinExplorer = 2;
 	private static final int nbMinEngineer=1;
+	private static final int nbMinKamikazes=3;
 	
 	//NbMax de chaque type :
 	private static final int nbMaxExplorer=10;
 	private static final int nbMaxEngineer=2;
 	
-	//
-	private static final int nbDeuxiemeEngineer=8;
+	//nb total d'agents à partir duquel on fait un deuxième engineer
+	private static final int nbDeuxiemeEngineer=10;
 	
 	
 	private Map<Integer,Integer> explorers;
 	private Map<Integer,Integer> rocketLaunchers;
 	private Map<Integer, Integer> engineers;
+	private Map<Integer,Integer> kamikazes;
 	
 	/**
 	 * Constructeur
@@ -58,6 +60,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		explorers=new HashMap<Integer,Integer>();
 		rocketLaunchers=new HashMap<Integer,Integer>();
 		engineers=new HashMap<Integer,Integer>();
+		kamikazes=new HashMap<Integer,Integer>();
 	}
 
 	//Accesseurs -------------------------------------------------------------
@@ -80,7 +83,9 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	public int getNbMinEngineer(){
 		return nbMinEngineer;
 	}
-	
+	public int getNbMinKamikazes(){
+		return nbMinKamikazes;
+	}
 	public int getNbMaxEngineer(){
 		return nbMaxEngineer;
 	}
@@ -99,6 +104,10 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	
 	public int getNbRocketLauncher(){
 		return rocketLaunchers.size();
+	}
+	
+	public int getNbKamikaze(){
+		return kamikazes.size();
 	}
 	
 	public int getNbTotalAgents(){
@@ -231,25 +240,33 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	 * Si pas de nouvelle d'un agent pdt trois tours, considéré comme mort.
 	 * */
 	private void verifierListesAgents(){
+		
 		//Explorers ------------------------------------
 		Set<Integer> listeCles = explorers.keySet();
-		//Je décrémente tout
+			//Je décrémente tout
 		for(Integer cle : listeCles){
 			explorers.put(cle,explorers.get(cle)-1);
 		}
 		
 		//Rocket Launcher ---------------------------------
 		listeCles = rocketLaunchers.keySet();
-		//Je décrémente tout
+			//Je décrémente tout
 		for(Integer cle : listeCles){
 			rocketLaunchers.put(cle,rocketLaunchers.get(cle)-1);
 		}
 		
 		//Engineers ---------------------------------------
 		listeCles = engineers.keySet();
-		//Je décrémente tout
+			//Je décrémente tout
 		for(Integer cle : listeCles){
 			engineers.put(cle,engineers.get(cle)-1);
+		}
+		
+		//Kamikazes ---------------------------------------
+		listeCles = kamikazes.keySet();
+			//Je décrémente tout
+		for(Integer cle : listeCles){
+			kamikazes.put(cle,kamikazes.get(cle)-1);
 		}
 		
 		for(WarMessage msg : messages){
@@ -262,6 +279,9 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 				}
 				if(msg.getSenderType().equals(WarAgentType.WarEngineer)){
 					engineers.put(msg.getSenderID(), 3);
+				}
+				if(msg.getSenderType().equals(WarAgentType.WarKamikaze)){
+					kamikazes.put(msg.getSenderID(), 3);
 				}
 			}
 		}
@@ -302,6 +322,16 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 			Integer cle = (Integer) it.next();
 			
 			if(engineers.get(cle)<=0){
+				it.remove();
+			}
+		}
+		
+		//Kamikazes ----------------------------------
+		it=kamikazes.keySet().iterator();
+		while (it.hasNext()){
+			Integer cle = (Integer) it.next();
+			
+			if(kamikazes.get(cle)<=0){
 				it.remove();
 			}
 		}

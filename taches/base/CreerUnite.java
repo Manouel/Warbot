@@ -37,12 +37,17 @@ public class CreerUnite extends TacheAgent{
 				lastCreatedUnit=WarAgentType.WarEngineer;
 			}
 			//Sinon, si nbRocket<nbMinRocket
-			else if(base.getNbRocketLauncher()<base.getNbMinRocket()){
+			else if(base.getNbRocketLauncher()<base.getNbMinRocket() 
+					&& !(lastCreatedUnit.equals(WarAgentType.WarRocketLauncher))){
 				lastCreatedUnit=WarAgentType.WarRocketLauncher;
+			}
+			else if(base.getNbKamikaze()<base.getNbMinKamikazes() 
+					&& !(lastCreatedUnit.equals(WarAgentType.WarKamikaze))){
+				lastCreatedUnit=WarAgentType.WarKamikaze;
 			}
 			
 			else {
-				//si nbAgents > 10
+				//si nbAgents > nbDeuxiemeEngineer
 				if(base.getNbTotalAgents()>base.getNbDeuxiemeEngineer()
 						&& base.getNbMaxEngineer()>base.getNbEngineer()){
 					base.getBrain().setDebugStringColor(Color.green);
@@ -50,18 +55,28 @@ public class CreerUnite extends TacheAgent{
 				}
 				//Si nbExplorers<nbMaxExplorers
 				else{ if(base.getNbExplorer()<base.getNbMaxExplorer()){
-						//Si lascreatedunit!=rocket
-						if(!(lastCreatedUnit.equals(WarAgentType.WarRocketLauncher))){
+						//Si lastcreatedunit=kamikaze
+						if(lastCreatedUnit.equals(WarAgentType.WarKamikaze)){
+							lastCreatedUnit=WarAgentType.WarExplorer;
+						}
+						//Sinon si lastcreatedunit=explorers
+						else if(lastCreatedUnit.equals(WarAgentType.WarExplorer)){
 							lastCreatedUnit=WarAgentType.WarRocketLauncher;
 						}
-						//Sinon, si lastcreatedunit!=explorer
-						else if(!(lastCreatedUnit.equals(WarAgentType.WarExplorer))){
-							lastCreatedUnit=WarAgentType.WarExplorer;
+						//Sinon
+						else {
+							lastCreatedUnit=WarAgentType.WarKamikaze;
 						}
 					
 					}
-					else{
-						lastCreatedUnit=WarAgentType.WarRocketLauncher;
+					else {
+						//Sinon si lastcreatedunit=kamikaze
+						if(lastCreatedUnit.equals(WarAgentType.WarKamikaze)){
+							lastCreatedUnit=WarAgentType.WarRocketLauncher;
+						}
+						else{
+							lastCreatedUnit=WarAgentType.WarKamikaze;
+						}
 					}
 				}
 			
