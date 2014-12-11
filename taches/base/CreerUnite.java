@@ -5,6 +5,7 @@ import java.awt.Color;
 import edu.turtlekit3.warbot.agents.agents.WarBase;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrainController;
+import pepisha.Constants;
 import pepisha.WarBaseBrainController;
 import pepisha.taches.TacheAgent;
 
@@ -29,32 +30,32 @@ public class CreerUnite extends TacheAgent{
 		{
 			
 			//si nbExplorers<nbMinExplorers
-			if(base.getNbExplorer()<base.getNbMinExplorer()){
+			if(base.getNbExplorer()<Constants.nbMinExplorer){
 				lastCreatedUnit=WarAgentType.WarExplorer;
 			}
 			//Sinon, si nbEngineer =0
-			else if(base.getNbEngineer()<base.getNbMinEngineer()){
+			else if(base.getNbEngineer()<Constants.nbMinEngineer){
 				lastCreatedUnit=WarAgentType.WarEngineer;
 			}
 			//Sinon, si nbRocket<nbMinRocket
-			else if(base.getNbRocketLauncher()<base.getNbMinRocket() 
+			else if(base.getNbRocketLauncher()<Constants.nbMinRocket 
 					&& !(lastCreatedUnit.equals(WarAgentType.WarRocketLauncher))){
 				lastCreatedUnit=WarAgentType.WarRocketLauncher;
 			}
-			else if(base.getNbKamikaze()<base.getNbMinKamikazes() 
+			else if(base.getNbKamikaze()<Constants.nbMinKamikazes 
 					&& !(lastCreatedUnit.equals(WarAgentType.WarKamikaze))){
 				lastCreatedUnit=WarAgentType.WarKamikaze;
 			}
 			
 			else {
 				//si nbAgents > nbDeuxiemeEngineer
-				if(base.getNbTotalAgents()>base.getNbDeuxiemeEngineer()
-						&& base.getNbMaxEngineer()>base.getNbEngineer()){
+				if(base.getNbTotalAgents()>Constants.nbDeuxiemeEngineer
+						&& Constants.nbMaxEngineer>base.getNbEngineer()){
 					base.getBrain().setDebugStringColor(Color.green);
 					lastCreatedUnit=WarAgentType.WarEngineer;
 				}
 				//Si nbExplorers<nbMaxExplorers
-				else{ if(base.getNbExplorer()<base.getNbMaxExplorer()){
+				else{ if(base.getNbExplorer()<Constants.nbMaxExplorer){
 						//Si lastcreatedunit=kamikaze
 						if(lastCreatedUnit.equals(WarAgentType.WarKamikaze)){
 							lastCreatedUnit=WarAgentType.WarExplorer;
