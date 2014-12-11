@@ -25,6 +25,12 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 	// Liste de messages
 	private ArrayList<WarMessage> messages;
 	
+	// Distance à parcourir pour poser la tourelle
+	private double distance = 0.0;
+	
+	// Nourriture perçue
+	private WarPercept food;
+	
 	
 	public WarEngineerBrainController() {
 		super();
@@ -35,6 +41,19 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 	public ArrayList<WarMessage> getListeMessages() {
 		return this.messages;
 	}
+	
+	public double getDistance() {
+		return this.distance;
+	}
+	
+	public void setDistance(double dist) {
+		distance = dist;
+	}
+	
+	public WarPercept getFood() {
+		return this.food;
+	}
+	
 	
 	/**
 	 * @action change le toReturn
@@ -80,10 +99,6 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 	{
 		eatFood();
 		
-		if (toReturn == null) {
-			getFood();
-		}
-		
 		perceptEnemyBase();
 		
 		imAlive();
@@ -97,11 +112,13 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 	 * */
 	private void perceptFood(){
 		
+		food = null;
+		
 		ArrayList<WarPercept> nourriture = getBrain().getPerceptsResources();
 		
 		if (nourriture != null && nourriture.size() > 0)
 		{
-			WarPercept food = nourriture.get(0);
+			food = nourriture.get(0);
 			
 			// On envoie un message aux autres explorer pour dire qu'il y a de la nourriture
 			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.foodHere,
@@ -121,32 +138,6 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 	{
 		if (!getBrain().isBagEmpty()) {
 			toReturn = WarEngineer.ACTION_EAT;
-		}
-	}
-	
-	private void wiggle()
-	{
-		getBrain().setRandomHeading(10);
-	}
-	
-	private void getFood()
-	{
-		ArrayList<WarPercept> nourriture = getBrain().getPerceptsResources();
-		
-		// Si il y a de la nourriture dans notre champ de vision
-		if(nourriture != null && nourriture.size() > 0)
-		{			
-			WarPercept lePlusProche = nourriture.get(0); // le 0 est le plus proche normalement
-			
-			if(lePlusProche.getDistance() <= ControllableWarAgent.MAX_DISTANCE_GIVE) {
-				toReturn = MovableWarAgent.ACTION_TAKE;
-			} else {
-				getBrain().setHeading(lePlusProche.getAngle());
-			}
-		}
-		else
-		{
-			wiggle();
 		}
 	}
 	
