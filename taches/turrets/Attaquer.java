@@ -23,13 +23,16 @@ public class Attaquer extends TacheAgent {
 		WarTurretBrainController turret = (WarTurretBrainController) typeAgent;
 		
 		ArrayList<WarPercept> percept = turret.getBrain().getPerceptsEnemies();
-
 		if(percept != null && percept.size() > 0){	
 			
 			if(turret.getBrain().isReloaded()){
 				turret.getBrain().setHeading(percept.get(0).getAngle());
 				turret.setToReturn(WarRocketLauncher.ACTION_FIRE);
 			}
+		}
+		else{
+			Tourner nvTache=new Tourner(turret);
+			turret.setTacheCourante(nvTache);
 		}
 	}
 

@@ -32,24 +32,15 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	
 	private ArrayList<WarMessage> messages;
 	
-	//Nombre minimal d'agents de chaque type :
-	private static final int nbMinRocket = 5;
-	public static final int nbMinExplorer = 2;
-	private static final int nbMinEngineer=1;
-	private static final int nbMinKamikazes=3;
-	
-	//NbMax de chaque type :
-	private static final int nbMaxExplorer=10;
-	private static final int nbMaxEngineer=2;
-	
-	//nb total d'agents à partir duquel on fait un deuxième engineer
-	private static final int nbDeuxiemeEngineer=10;
-	
-	
+	//Listes d'agents présents
 	private Map<Integer,Integer> explorers;
 	private Map<Integer,Integer> rocketLaunchers;
 	private Map<Integer, Integer> engineers;
 	private Map<Integer,Integer> kamikazes;
+	
+	
+	
+	
 	
 	/**
 	 * Constructeur
@@ -72,27 +63,6 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		toReturn=nvReturn;
 	}
 	
-	public int getNbMinRocket(){
-		return nbMinRocket;
-	}
-	
-	public int getNbMinExplorer(){
-		return nbMinExplorer;
-	}
-	
-	public int getNbMinEngineer(){
-		return nbMinEngineer;
-	}
-	public int getNbMinKamikazes(){
-		return nbMinKamikazes;
-	}
-	public int getNbMaxEngineer(){
-		return nbMaxEngineer;
-	}
-	
-	public int getNbMaxExplorer(){
-		return nbMaxExplorer;
-	}
 	
 	public int getNbEngineer(){
 		return engineers.size();
@@ -114,9 +84,6 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		return (getNbRocketLauncher()+getNbExplorer()+getNbEngineer());
 	}
 	
-	public int getNbDeuxiemeEngineer(){
-		return nbDeuxiemeEngineer;
-	}
 	
 	//Méthodes ----------------------------------------------------------------
 	/**

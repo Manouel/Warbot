@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import pepisha.taches.TacheAgent;
 import pepisha.taches.turrets.Attaquer;
+import pepisha.taches.turrets.Tourner;
 import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.agents.WarTurret;
@@ -27,7 +28,7 @@ public class WarTurretBrainController extends WarTurretAbstractBrainController {
 	
 	public WarTurretBrainController() {
 		super();
-		tacheCourante = new Attaquer(this);
+		tacheCourante = new Tourner(this);
 	}
 	
 	
@@ -105,4 +106,5 @@ public class WarTurretBrainController extends WarTurretAbstractBrainController {
 			toReturn = WarTurret.ACTION_RELOAD;
 		}
 	}
+	
 }

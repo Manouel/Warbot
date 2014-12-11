@@ -116,6 +116,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		isBaseAttacked() ;
 		attackEnemyBase();
 		perceptFood();
+		//eviterMissile();
 	}
 	
 	
@@ -202,5 +203,16 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
 		}
 	}
+	
+//	/**
+//	 * @action évite les rockets 
+//	 * */
+//	private void eviterMissile(){
+//		ArrayList<WarPercept> missiles = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocket);
+//		if(missiles !=null && missiles.size()>0){
+//			WarPercept missile = missiles.get(0);
+//			getBrain().setHeading);
+//		}
+//	}
 	
 }
