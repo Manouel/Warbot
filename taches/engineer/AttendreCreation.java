@@ -23,7 +23,7 @@ public class AttendreCreation extends TacheAgent
 		WarEngineerBrainController engineer = (WarEngineerBrainController) typeAgent;
 		
 		if (engineer.getDistance() > 0) {
-			engineer.setDistance(engineer.getDistance() - 1);
+			engineer.setDistance(engineer.getDistance() - WarEngineer.SPEED);
 		}
 		else {
 			ArrayList<WarPercept> bases = engineer.getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);

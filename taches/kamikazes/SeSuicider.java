@@ -24,7 +24,7 @@ public class SeSuicider extends TacheAgent
 		super(b);
 	}
 	
-	private WarMessage getEnnemyBaseMessage()
+	private WarMessage getEnemyBaseMessage()
 	{
 		WarKamikazeBrainController kamikaze = (WarKamikazeBrainController) typeAgent;
 		
@@ -59,7 +59,7 @@ public class SeSuicider extends TacheAgent
 		else {
 			// Si on reçoit un message de base ennemie
 			
-			WarMessage m = getEnnemyBaseMessage();
+			WarMessage m = getEnemyBaseMessage();
 			if (m != null) {
 				CoordPolar p = kamikaze.getBrain().getIndirectPositionOfAgentWithMessage(m);
 				
