@@ -43,10 +43,16 @@ public class AttaquerEnnemi extends TacheAgent{
 			}
 			
 			if(rocket.getBrain().isReloaded()){
+				if(base){
+					rocket.getBrain().setHeading(percept.get(ibase).getAngle());
 				
-				rocket.getBrain().setHeading(percept.get(0).getAngle());
+				}
+				else{
+					rocket.getBrain().setHeading(percept.get(0).getAngle());
+				}
 				rocket.setToReturn(WarRocketLauncher.ACTION_FIRE);
 			}else{
+				rocket.getBrain().setDebugStringColor(Color.green);
 				//si je suis pas trop pres de l'enemy je m'approche
 				if(percept.get(0).getDistance() > WarRocket.EXPLOSION_RADIUS + 1)
 					rocket.setToReturn(WarRocketLauncher.ACTION_MOVE);

@@ -7,6 +7,7 @@ import java.util.Random;
 import pepisha.taches.TacheAgent;
 import pepisha.taches.explorer.ChercherEnnemis;
 import pepisha.taches.explorer.ChercherNourriture;
+import pepisha.taches.explorer.LocaliserBase;
 import edu.turtlekit3.warbot.agents.ControllableWarAgent;
 import edu.turtlekit3.warbot.agents.MovableWarAgent;
 import edu.turtlekit3.warbot.agents.agents.WarBase;
@@ -50,7 +51,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		super();
 		
 		// Si le nb de cueilleurs < min OU inférieur à 70% du nb d'explorers total
-		if (nbCueilleurs < Constants.nbMinExplorer || nbCueilleurs < ((nbEspions+nbCueilleurs) * 0.7)) {
+		if (nbCueilleurs < Constants.nbMinExplorer || nbEspions >= 1) {
 			tacheCourante = new ChercherNourriture(this);
 			nbCueilleurs++;
 			cueilleur = true;
@@ -64,6 +65,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	
 	public ArrayList<WarMessage> getListeMessages() {
 		return this.messages;
+	}
+	
+	public boolean estCueilleur() {
+		return this.cueilleur;
 	}
 	
 	/**
@@ -121,6 +126,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	 */
 	private void doReflex()
 	{
+		refreshExplorersNb();
+		
 		changeComportement();
 		
 		perceptEnemyBase();
@@ -128,6 +135,24 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		perceptFood();
 		
 		imAlive();
+	}
+	
+	
+	private void refreshExplorersNb() {
+		for (WarMessage m : messages) {
+			if (m.getMessage().equals(Constants.noEspion)) {
+				nbEspions = 0;
+			}
+		}
+		
+		if (nbEspions == 0 && nbCueilleurs >= Constants.nbMinExplorer) {
+			if (cueilleur) {
+				cueilleur = false;
+				tacheCourante = new ChercherEnnemis(this);
+				nbCueilleurs--;
+				nbEspions++;
+			}
+		}
 	}
 	
 	
@@ -164,7 +189,11 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	 */
 	private void imAlive()
 	{
-		getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.imAlive, "");
+		if (estCueilleur()) {
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.imAlive, "c");
+		} else {
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.imAlive, "e");
+		}
 	}
 	
 	
@@ -179,8 +208,15 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		{	
 			WarPercept base = basesEnnemies.get(0);
 			
-			// On envoie aux bases la position de la base ennemie
+			// On envoie la position de la base ennemie
 			getBrain().broadcastMessageToAll(Constants.enemyBaseHere, String.valueOf(base.getDistance()), String.valueOf(base.getAngle()));
+		
+			// Si c'est un espion, on tourne
+			if (!estCueilleur()) {
+				getBrain().setHeading(base.getAngle() + 45);
+				setDistance(base.getDistance());
+				setTacheCourante(new LocaliserBase(this));
+			}
 		}
 	}
 	

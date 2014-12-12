@@ -1,5 +1,7 @@
 package pepisha;
 
+import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
+
 public class Constants {
 	public final static String whereAreYou="whereAreYou?";
 	public final static String here="here";
@@ -11,7 +13,7 @@ public class Constants {
 	// Constantes base
 	
 	public static final String baseIsAttack = "baseIsAttack";
-	
+	public static final String noEspion ="noEspion";
 	// Constantes explorer
 	
 	public static final String foodHere = "foodHere";
@@ -30,3 +32,6 @@ public class Constants {
 	//nb total d'agents à partir duquel on fait un deuxième engineer
 	public static final int nbDeuxiemeEngineer=10;
 }
+
+
+

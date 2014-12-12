@@ -27,6 +27,9 @@ public class WarKamikazeBrainController extends WarKamikazeAbstractBrainControll
 	// Vie précédente
 	private int vie;
 	
+	private boolean seDirigerVersPoint=false; //Si true, on se dirige vers le pt poinOuAller
+	private double distancePointOuAller;
+	
 	
 	public WarKamikazeBrainController() {
 		super();
@@ -34,7 +37,23 @@ public class WarKamikazeBrainController extends WarKamikazeAbstractBrainControll
 		vie = WarKamikaze.MAX_HEALTH;
 	}
 	
-
+	//Accesseurs----------------------------------------------------------------------
+	public double getDistancePointOuAller(){
+		return distancePointOuAller;
+	}
+	
+	public boolean getSeDirigerVersPoint(){
+		return seDirigerVersPoint;
+	}
+	
+	public void setDistancePoinOuAller(double nvPoint){
+		distancePointOuAller=nvPoint;
+	}
+	
+	public void setSeDirigerVersPoint(boolean nvVal){
+		seDirigerVersPoint=nvVal;
+	}
+	
 	public ArrayList<WarMessage> getListeMessages() {
 		return this.messages;
 	}
@@ -51,7 +70,7 @@ public class WarKamikazeBrainController extends WarKamikazeAbstractBrainControll
 		tacheCourante=nvTache;
 	}
 	
-
+	//Méthodes -----------------------------------------------------------------------------
 	@Override
 	public String action() {
 		toReturn = null;

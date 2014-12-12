@@ -34,7 +34,8 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	private ArrayList<WarMessage> messages;
 	
 	//Listes d'agents présents
-	private Map<Integer,Integer> explorers;
+	private Map<Integer,Integer> explorersCueilleurs;
+	private Map<Integer,Integer> explorersEspions;
 	private Map<Integer,Integer> rocketLaunchers;
 	private Map<Integer, Integer> engineers;
 	private Map<Integer,Integer> kamikazes;
@@ -51,7 +52,8 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	public WarBaseBrainController() {
 		super();
 		tacheCourante=new CreerUnite(this);
-		explorers=new HashMap<Integer,Integer>();
+		explorersEspions=new HashMap<Integer,Integer>();
+		explorersCueilleurs=new HashMap<Integer,Integer>();
 		rocketLaunchers=new HashMap<Integer,Integer>();
 		engineers=new HashMap<Integer,Integer>();
 		kamikazes=new HashMap<Integer,Integer>();
@@ -72,8 +74,12 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		return engineers.size();
 	}
 	
-	public int getNbExplorer(){
-		return explorers.size();
+	public int getNbExplorerCueilleurs(){
+		return explorersCueilleurs.size();
+	}
+	
+	public int getNbExplorersEspions(){
+		return explorersEspions.size();
 	}
 	
 	public int getNbRocketLauncher(){
@@ -85,7 +91,10 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	}
 	
 	public int getNbTotalAgents(){
-		return (getNbRocketLauncher()+getNbExplorer()+getNbEngineer());
+		return (getNbRocketLauncher()+getNbExplorerCueilleurs()+getNbExplorersEspions()+getNbKamikaze()+getNbEngineer());
+	}
+	public int getNbExplorer(){
+		return getNbExplorersEspions()+getNbExplorerCueilleurs();
 	}
 	
 	
@@ -125,8 +134,8 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		giveMyPosition();
 		healMySelf();
 		verifierListesAgents();
-		getMessageAboutEnemyBaseHere();
-		sendMessageAboutEnemyBasePosition();
+		verifierNombreExplorersEspions();
+		verifierNombreExplorersCueilleurs();
 		
 	}
 	
@@ -142,19 +151,6 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		return ((rockets != null && rockets.size() > 0)
 				|| (tourelles != null && tourelles.size() > 0));
 		
-//		for (WarPercept p : rockets) {
-//            getBrain().setDebugStringColor(Color.orange);
-//            getBrain().setDebugString("Je suis attaqué !!");
-//			return p;
-//		}
-		
-//		for (WarPercept p : tourelles) {
-//            getBrain().setDebugStringColor(Color.orange);
-//            getBrain().setDebugString("Je suis attaqué !!");
-//			return p;
-//		}
-		
-//		return null;
 	}
 	
 	
@@ -165,7 +161,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	private void askRocketLaucherToComeBack()
 	{
 		ArrayList<WarPercept> rockets = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
-		ArrayList<WarPercept> tourelles = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+		ArrayList<WarPercept> tourelles = getBrain().getPerceptsEnemiesByType(WarAgentType.WarTurret);
 		
 		if (rockets != null && rockets.size() > 0){
 			WarPercept p = rockets.get(0);
@@ -179,9 +175,6 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
         	getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, 
 					Constants.baseIsAttack, String.valueOf(p.getDistance()), String.valueOf(p.getAngle()));
 		}
-		
-//		getBrain().setDebugStringColor(Color.orange);
-//        getBrain().setDebugString("Je suis attaqué !! (mess envoyé)");
 	}
 
 	
@@ -220,46 +213,24 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	}
 	
 	/**
-	 * @action regarde la base a reçu un message avec la position d'une base ennemie 
-	 * et la garde en memoire
+	 * @action demande un espion si plus d'espions
 	 * */
-	public void getMessageAboutEnemyBaseHere(){
-		for(WarMessage msg : messages){
-			if(msg.getMessage().equals(Constants.enemyBaseHere)){
-				
-				CoordPolar pMess = getBrain().getIndirectPositionOfAgentWithMessage(msg);
-				int i= basesEnnemies.indexOf(pMess);
-				if(i!=-1){
-					if(basesEnnemies.get(i)!=null){
-						
-						if(!(pMess.equals(basesEnnemies.get(i)))){
-							basesEnnemies.add(basesEnnemies.size(), pMess);
-						}
-					}
-					else{
-						basesEnnemies.add(basesEnnemies.size(), pMess);
-					}
-				}
-				else{
-					basesEnnemies.add(basesEnnemies.size(), pMess);
-				}
-			}
+	private void verifierNombreExplorersEspions(){
+		if(getNbExplorersEspions()==0 && getNbExplorerCueilleurs()>2){
+			
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer,Constants.noEspion);
 		}
+		System.out.println("espions : "+getNbExplorersEspions());
 	}
 	
 	/**
-	 * @action envoie un message aux agents si on a au moins une base ennemie connue
+	 * @action demande un cueilleur si moins de deux cueilleurs
 	 * */
-	public void sendMessageAboutEnemyBasePosition(){
-		if(basesEnnemies.size()>0){
-			
-			getBrain().broadcastMessageToAll(Constants.enemyBaseHere,
-					String.valueOf(basesEnnemies.get(0).getAngle()), String.valueOf(basesEnnemies.get(0).getDistance()));
-	
+	private void verifierNombreExplorersCueilleurs(){
+		if(getNbExplorerCueilleurs()<2){
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer,"cueille");
 		}
-		
 	}
-
 	
 	/**
 	 * @action vérifie dans ses messages si elle a un message disant qu'un agent est en vie.
@@ -268,10 +239,17 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	private void verifierListesAgents(){
 		
 		//Explorers ------------------------------------
-		Set<Integer> listeCles = explorers.keySet();
+		//Explorers cueilleurs ----------------
+		Set<Integer> listeCles = explorersCueilleurs.keySet();
 			//Je décrémente tout
 		for(Integer cle : listeCles){
-			explorers.put(cle,explorers.get(cle)-1);
+			explorersCueilleurs.put(cle,explorersCueilleurs.get(cle)-1);
+		}
+		//Explorers espions ------------------
+		listeCles = explorersEspions.keySet();
+		//Je décrémente tout
+		for(Integer cle : listeCles){
+			explorersEspions.put(cle,explorersEspions.get(cle)-1);
 		}
 		
 		//Rocket Launcher ---------------------------------
@@ -298,7 +276,13 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		for(WarMessage msg : messages){
 			if(msg.getMessage().equals(Constants.imAlive)){
 				if(msg.getSenderType().equals(WarAgentType.WarExplorer)){
-					explorers.put(msg.getSenderID(), 3);
+					if(msg.getContent()[0].equals("c")){
+						explorersCueilleurs.put(msg.getSenderID(), 3);
+					}
+					else if(msg.getContent()[0].equals("e")){
+						explorersEspions.put(msg.getSenderID(), 3);
+					}
+					
 				}
 				if(msg.getSenderType().equals(WarAgentType.WarRocketLauncher)){
 					rocketLaunchers.put(msg.getSenderID(), 3);
@@ -322,12 +306,23 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	private void verifierAgentsMorts(){
 		
 		//Explorers ---------------------------------
-		Iterator it = explorers.keySet().iterator();
+		//Explorers cueilleurs----------
+		Iterator it = explorersCueilleurs.keySet().iterator();
 		
 		while (it.hasNext()){
 			Integer cle = (Integer) it.next();
 			
-			if(explorers.get(cle)<=0){
+			if(explorersCueilleurs.get(cle)<=0){
+				it.remove();
+			}
+		}
+		//Explorers espions --------------
+		it = explorersEspions.keySet().iterator();
+		
+		while (it.hasNext()){
+			Integer cle = (Integer) it.next();
+			
+			if(explorersEspions.get(cle)<=0){
 				it.remove();
 			}
 		}

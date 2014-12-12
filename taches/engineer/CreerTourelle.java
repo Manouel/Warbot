@@ -24,7 +24,7 @@ public class CreerTourelle extends TacheAgent {
 	// Energie minimum pour créer un nouvel agent
 	private static final int MIN_HEATH_TO_CREATE = (int) (WarEngineer.MAX_HEALTH * 0.8);
 	
-	private static final int DISTANCE_MAX_ATTAQUE_BASE = 500;
+	private static final int DISTANCE_MAX_ATTAQUE_BASE = 1000;
 	
 	
 	public CreerTourelle(WarBrainController b){

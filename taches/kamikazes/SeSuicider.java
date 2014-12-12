@@ -12,12 +12,13 @@ import edu.turtlekit3.warbot.tools.CoordPolar;
 import pepisha.Constants;
 import pepisha.WarKamikazeBrainController;
 import pepisha.taches.TacheAgent;
+import pepisha.taches.rocketLauncher.SeDirigerVers;
 
 public class SeSuicider extends TacheAgent
 {
 	private static final int DISTANCE_MAX_ATTAQUE_BASE = 500;
 	private static final int NB_MIN_ROCKETS_TO_KILL = 3;
-	
+	private static final int NB_MIN_TURRET_TO_KILL = 2;
 
 	public SeSuicider(WarBrainController b) {
 		super(b);
@@ -63,15 +64,25 @@ public class SeSuicider extends TacheAgent
 				CoordPolar p = kamikaze.getBrain().getIndirectPositionOfAgentWithMessage(m);
 				
 				if (p.getDistance() < DISTANCE_MAX_ATTAQUE_BASE) {
+					kamikaze.setDistancePoinOuAller(p.getDistance()-WarKamikaze.DISTANCE_OF_VIEW);
+					kamikaze.setSeDirigerVersPoint(true);
 					kamikaze.getBrain().setHeading(p.getAngle());
+					kamikaze.setToReturn(WarKamikaze.ACTION_MOVE);
+					SeDiriger nvTache=new SeDiriger(kamikaze);
+					kamikaze.setTacheCourante(nvTache);
 					kamikaze.setToReturn(WarKamikaze.ACTION_MOVE);
 				}
 			}
 			else {		// Sinon on cherche des rockets
 				ArrayList<WarPercept> rockets = kamikaze.getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
-
+				ArrayList<WarPercept> tourelles = kamikaze.getBrain().getPerceptsEnemiesByType(WarAgentType.WarTurret);
+				
 				if (kamikaze.getBrain().isReloaded() && rockets != null && rockets.size() >= NB_MIN_ROCKETS_TO_KILL) {
 					kamikaze.getBrain().setHeading(rockets.get(0).getAngle());
+					kamikaze.setToReturn(WarKamikaze.ACTION_FIRE);
+				}
+				else if(kamikaze.getBrain().isReloaded() && tourelles != null && tourelles.size() >= NB_MIN_TURRET_TO_KILL){
+					kamikaze.getBrain().setHeading(tourelles.get(0).getAngle());
 					kamikaze.setToReturn(WarKamikaze.ACTION_FIRE);
 				}
 				else {	// Si pas de rockets, on cherche
