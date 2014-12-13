@@ -26,7 +26,7 @@ public class Constants {
 	public static final int nbMinKamikazes=3;
 	
 	//NbMax de chaque type :
-	public static final int nbMaxExplorer=10;
+	public static final int nbMaxExplorer=5;
 	public static final int nbMaxEngineer=2;
 	
 	//nb total d'agents à partir duquel on fait un deuxième engineer
