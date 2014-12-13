@@ -98,14 +98,14 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 	private void doReflex()
 	{
 		eatFood();
-		
 		perceptEnemyBase();
-		
 		imAlive();
 		perceptFood();
 	}
 	
 	//Reflexes -------------------------------------------------------------------
+	
+
 	
 	/**
 	 * @action prévient les explorers que y a de la nourriture ici
@@ -122,6 +122,8 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 			
 			// On envoie un message aux autres explorer pour dire qu'il y a de la nourriture
 			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.foodHere,
+					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarEngineer, Constants.foodHere,
 					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
 		}
 	}

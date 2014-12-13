@@ -7,11 +7,13 @@ import pepisha.WarBaseBrainController;
 import pepisha.WarEngineerBrainController;
 import pepisha.WarKamikazeBrainController;
 import pepisha.taches.TacheAgent;
+import pepisha.taches.rocketLauncher.SeDirigerVers;
 import edu.turtlekit3.warbot.agents.ControllableWarAgent;
 import edu.turtlekit3.warbot.agents.MovableWarAgent;
 import edu.turtlekit3.warbot.agents.agents.WarBase;
 import edu.turtlekit3.warbot.agents.agents.WarEngineer;
 import edu.turtlekit3.warbot.agents.agents.WarKamikaze;
+import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.agents.WarTurret;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
@@ -85,7 +87,8 @@ public class CreerTourelle extends TacheAgent {
 				}
 			}
 		}
-		else {				// Pas assez de vie
+		else {				// Pas assez de viee
+			//Si j'ai perçu de la nourriture
 			if (engineer.getFood() != null) {
 				WarPercept food = engineer.getFood();
 				
@@ -96,13 +99,25 @@ public class CreerTourelle extends TacheAgent {
 					engineer.setToReturn(MovableWarAgent.ACTION_MOVE);
 				}
 			}
+			//Sinon, je regarde si j'ai reçu un message ayant la position de nourriture
 			else {
+				for(WarMessage m : engineer.getListeMessages()){
+					if(m.getMessage().equals(Constants.foodHere)){
+						CoordPolar p = engineer.getBrain().getIndirectPositionOfAgentWithMessage(m);
+						engineer.setDistance(p.getDistance()-WarEngineer.DISTANCE_OF_VIEW);
+						engineer.getBrain().setHeading(p.getAngle());
+						engineer.setToReturn(WarEngineer.ACTION_MOVE);
+						SeDirigerVersNourriture nvTache=new SeDirigerVersNourriture(engineer);
+						engineer.setTacheCourante(nvTache);
+					}
+				}
 				engineer.getBrain().setRandomHeading(10);
 				engineer.setToReturn(WarEngineer.ACTION_MOVE);
 			}
 		}
 	}
 
+	
 	@Override
 	public String toString() {
 		return "Tache Creer Tourelle";

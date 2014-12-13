@@ -82,7 +82,7 @@ public class WarTurretBrainController extends WarTurretAbstractBrainController {
 	//Reflexes -------------------------------------------------------------------------
 	
 	/**
-	 * @action prévient les explorers que y a de la nourriture ici
+	 * @action prévient les explorers et engineers que y a de la nourriture ici
 	 * */
 	private void perceptFood(){
 		
@@ -92,8 +92,10 @@ public class WarTurretBrainController extends WarTurretAbstractBrainController {
 		{
 			WarPercept food = nourriture.get(0);
 			
-			// On envoie un message aux autres explorer pour dire qu'il y a de la nourriture
+			// On envoie un message aux autres explorers et engineers pour dire qu'il y a de la nourriture
 			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.foodHere,
+					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarEngineer, Constants.foodHere,
 					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
 		}
 	}
