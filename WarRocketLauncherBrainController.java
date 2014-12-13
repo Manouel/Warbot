@@ -234,8 +234,10 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		{
 			WarPercept food = nourriture.get(0);
 			
-			// On envoie un message aux autres explorer pour dire qu'il y a de la nourriture
+			// On envoie un message aux autres explorers et engineers pour dire qu'il y a de la nourriture
 			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.foodHere,
+					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarEngineer, Constants.foodHere,
 					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
 		}
 	}	

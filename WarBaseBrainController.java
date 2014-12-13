@@ -128,6 +128,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	 * */
 	private void doReflex(){
 	
+		perceptFood();
 		if (isAttacked())
 			askRocketLaucherToComeBack();
 		
@@ -137,6 +138,26 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		verifierNombreExplorersEspions();
 		verifierNombreExplorersCueilleurs();
 		
+	}
+	
+	//Reflexes -------------------------------------------------------------------------------
+	/**
+	 * @action prévient les explorers que y a de la nourriture ici
+	 * */
+	private void perceptFood(){
+		
+		ArrayList<WarPercept> nourriture = getBrain().getPerceptsResources();
+		
+		if (nourriture != null && nourriture.size() > 0)
+		{
+			WarPercept food = nourriture.get(0);
+			
+			// On envoie un message aux autres explorers et engineers pour dire qu'il y a de la nourriture
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.foodHere,
+					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarEngineer, Constants.foodHere,
+					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
+		}
 	}
 	
 	/**
