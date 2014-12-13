@@ -55,6 +55,7 @@ public class ChercherNourriture extends TacheAgent {
 			WarPercept lePlusProche = nourriture.get(0); // le 0 est le plus proche normalement
 			
 			if(lePlusProche.getDistance() <= ControllableWarAgent.MAX_DISTANCE_GIVE) {
+				explorer.setDistanceLastFood(0);
 				explorer.setToReturn(MovableWarAgent.ACTION_TAKE);
 			} else {
 				explorer.getBrain().setHeading(lePlusProche.getAngle());

@@ -16,6 +16,7 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarExplorerAbstractBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
+import edu.turtlekit3.warbot.tools.CoordPolar;
 
 
 public class WarExplorerBrainController extends WarExplorerAbstractBrainController
@@ -39,6 +40,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	
 	// Nombre d'espions
 	private static int nbEspions = 0;
+	
+	private double distanceLastFood;
 	
 	// Liste de messages
 	private ArrayList<WarMessage> messages;
@@ -90,6 +93,14 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		distance=nvDistance;
 	}
 	
+	public double getDistanceLastFood(){
+		return distanceLastFood;
+	}
+	
+	public void setDistanceLastFood(double distance){
+		distanceLastFood=distance;
+	}
+	
 	
 	/**
 	 * @action Définit le comportement de l'explorer
@@ -125,9 +136,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	 * @action Définit l'ensemble des réflèxes de l'agent
 	 */
 	private void doReflex()
-	{
-		refreshExplorersNb();
-		
+	{	
 		changeComportement();
 		
 		perceptEnemyBase();
@@ -135,24 +144,6 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		perceptFood();
 		
 		imAlive();
-	}
-	
-	
-	private void refreshExplorersNb() {
-		for (WarMessage m : messages) {
-			if (m.getMessage().equals(Constants.noEspion)) {
-				nbEspions = 0;
-			}
-		}
-		
-		if (nbEspions == 0 && nbCueilleurs >= Constants.nbMinExplorer) {
-			if (cueilleur) {
-				cueilleur = false;
-				tacheCourante = new ChercherEnnemis(this);
-				nbCueilleurs--;
-				nbEspions++;
-			}
-		}
 	}
 	
 	
@@ -172,7 +163,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 					nbCueilleurs++;
 				}
 			}
-			else if (m.getMessage().equals("chercheEnnemis")) {
+			else if (m.getMessage().equals(Constants.noEspion)) {
 				if (cueilleur) {
 					cueilleur = false;
 					tacheCourante = new ChercherEnnemis(this);
@@ -230,6 +221,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		
 		if (nourriture != null && nourriture.size() > 0)
 		{
+			distanceLastFood = 0;
 			WarPercept food = nourriture.get(0);
 			
 			// On envoie un message aux autres explorers et ingénieurs pour dire qu'il y a de la nourriture

@@ -7,6 +7,7 @@ import pepisha.Constants;
 import pepisha.WarExplorerBrainController;
 import pepisha.taches.TacheAgent;
 import edu.turtlekit3.warbot.agents.MovableWarAgent;
+import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.WarBrainController;
@@ -38,6 +39,9 @@ public class RetournerNourriture extends TacheAgent {
 	@Override
 	public void exec() {
 		WarExplorerBrainController explorer = (WarExplorerBrainController) typeAgent;
+		
+		// On augmente la distance à parcourir pour revenir à la dernière nourriture vue
+		explorer.setDistanceLastFood(explorer.getDistanceLastFood() + WarExplorer.SPEED);
 		
 		// On récupère la liste des bases alliées qui sont dans les environs
 		ArrayList<WarPercept> bases = explorer.getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);

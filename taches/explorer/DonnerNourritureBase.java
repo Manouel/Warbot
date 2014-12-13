@@ -23,7 +23,12 @@ public class DonnerNourritureBase extends TacheAgent {
 		if(explorer.getBrain().isBagEmpty())
 		{
 			explorer.getBrain().setHeading(explorer.getBrain().getHeading() + 180);
-			explorer.setTacheCourante(new ChercherNourriture(typeAgent));
+			if (explorer.getDistanceLastFood() > 0){
+				explorer.setTacheCourante(new RevenirDerniereNourriture(typeAgent));
+			} else {
+				explorer.setTacheCourante(new ChercherNourriture(typeAgent));
+			}
+			
 			return;
 		}
 		

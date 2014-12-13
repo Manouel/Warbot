@@ -238,10 +238,8 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	 * */
 	private void verifierNombreExplorersEspions(){
 		if(getNbExplorersEspions()==0 && getNbExplorerCueilleurs()>2){
-			
-			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer,Constants.noEspion);
+			getBrain().sendMessage(explorersCueilleurs.keySet().iterator().next(), Constants.noEspion);
 		}
-		System.out.println("espions : "+getNbExplorersEspions());
 	}
 	
 	/**
@@ -249,7 +247,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	 * */
 	private void verifierNombreExplorersCueilleurs(){
 		if(getNbExplorerCueilleurs()<2){
-			getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer,"cueille");
+			getBrain().sendMessage(explorersEspions.keySet().iterator().next(), "cueille");
 		}
 	}
 	
