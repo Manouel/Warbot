@@ -5,10 +5,12 @@ import java.util.ArrayList;
 
 import pepisha.taches.TacheAgent;
 import pepisha.taches.engineer.CreerTourelle;
+import pepisha.taches.engineer.SeDirigerVersNourriture;
 import edu.turtlekit3.warbot.agents.ControllableWarAgent;
 import edu.turtlekit3.warbot.agents.MovableWarAgent;
 import edu.turtlekit3.warbot.agents.agents.WarEngineer;
 import edu.turtlekit3.warbot.agents.agents.WarExplorer;
+import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarEngineerAbstractBrainController;
@@ -125,7 +127,15 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
 			getBrain().broadcastMessageToAgentType(WarAgentType.WarEngineer, Constants.foodHere,
 					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
+			
+			if(!(tacheCourante.getClass().getSimpleName().equals("AttendreCreation"))){
+				System.out.println(tacheCourante.getClass().getSimpleName());
+				CreerTourelle nvTache=new CreerTourelle(this);
+				setTacheCourante(nvTache);
+			}
 		}
+		
+
 	}
 	
 	/**
