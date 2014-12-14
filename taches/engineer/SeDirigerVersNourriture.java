@@ -14,6 +14,7 @@ public class SeDirigerVersNourriture extends TacheAgent{
 	@Override
 	public void exec() {
 		WarEngineerBrainController engineer = (WarEngineerBrainController) typeAgent;
+		
 		if (engineer.getDistance() > 0) {
 			engineer.setDistance(engineer.getDistance() - WarEngineer.SPEED);
 		}
@@ -28,7 +29,6 @@ public class SeDirigerVersNourriture extends TacheAgent{
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "Tache se diriger vers nourriture";
 	}
 

@@ -110,7 +110,7 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 
 	
 	/**
-	 * @action prévient les explorers que y a de la nourriture ici
+	 * @action prévient les explorers et ingénieurs qu'il y a de la nourriture ici
 	 * */
 	private void perceptFood(){
 		

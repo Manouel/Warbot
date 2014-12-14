@@ -59,7 +59,7 @@ public class SeSuicider extends TacheAgent
 			if (m != null) {
 				CoordPolar p = kamikaze.getBrain().getIndirectPositionOfAgentWithMessage(m);
 				
-				if (p.getDistance() < Constants.DISTANCE_MAX_ATTAQUE_BASE) {
+				if (p.getDistance() < Constants.DISTANCE_MAX_KAMIKAZE_ATTAQUE_BASE) {
 					kamikaze.setDistancePoinOuAller(p.getDistance()-WarKamikaze.DISTANCE_OF_VIEW);
 					kamikaze.setSeDirigerVersPoint(true);
 					kamikaze.getBrain().setHeading(p.getAngle());

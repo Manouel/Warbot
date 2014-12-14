@@ -26,8 +26,6 @@ public class CreerTourelle extends TacheAgent {
 	// Energie minimum pour créer un nouvel agent
 	private static final int MIN_HEATH_TO_CREATE = (int) (WarEngineer.MAX_HEALTH * 0.8);
 	
-	private static final int DISTANCE_MAX_ATTAQUE_BASE = 1000;
-	
 	
 	public CreerTourelle(WarBrainController b){
 		super((WarEngineerBrainController)b);
@@ -39,6 +37,19 @@ public class CreerTourelle extends TacheAgent {
 		
 		for (WarMessage m : enginneer.getListeMessages()) {
 			if (m.getMessage().equals(Constants.enemyBaseHere)) {
+				return m;
+			}
+		}
+		
+		return null;
+	}
+	
+	private WarMessage getFoodMessage()
+	{
+		WarEngineerBrainController enginneer = (WarEngineerBrainController) typeAgent;
+		
+		for (WarMessage m : enginneer.getListeMessages()) {
+			if (m.getMessage().equals(Constants.foodHere)) {
 				return m;
 			}
 		}
@@ -70,7 +81,7 @@ public class CreerTourelle extends TacheAgent {
 				if (m != null) {
 					CoordPolar p = engineer.getBrain().getIndirectPositionOfAgentWithMessage(m);
 					
-					if (p.getDistance() < DISTANCE_MAX_ATTAQUE_BASE) {
+					if (p.getDistance() < Constants.DISTANCE_MAX_INGENIEUR_ATTAQUE_BASE) {
 						engineer.getBrain().setHeading(p.getAngle());
 						engineer.setDistance(p.getDistance() - WarTurret.DISTANCE_OF_VIEW);
 						engineer.setTacheCourante(new AttendreCreation(engineer));
@@ -87,7 +98,7 @@ public class CreerTourelle extends TacheAgent {
 				}
 			}
 		}
-		else {				// Pas assez de viee
+		else {				// Pas assez de vie
 			//Si j'ai perçu de la nourriture
 			if (engineer.getFood() != null) {
 				WarPercept food = engineer.getFood();
@@ -101,17 +112,19 @@ public class CreerTourelle extends TacheAgent {
 			}
 			//Sinon, je regarde si j'ai reçu un message ayant la position de nourriture
 			else {
-				for(WarMessage m : engineer.getListeMessages()){
-					if(m.getMessage().equals(Constants.foodHere)){
-						CoordPolar p = engineer.getBrain().getIndirectPositionOfAgentWithMessage(m);
-						engineer.setDistance(p.getDistance()-WarEngineer.DISTANCE_OF_VIEW);
-						engineer.getBrain().setHeading(p.getAngle());
-						engineer.setToReturn(WarEngineer.ACTION_MOVE);
-						SeDirigerVersNourriture nvTache=new SeDirigerVersNourriture(engineer);
-						engineer.setTacheCourante(nvTache);
-					}
+				WarMessage m = getFoodMessage();
+				if (m != null) {
+					CoordPolar p = engineer.getBrain().getIndirectPositionOfAgentWithMessage(m);
+					engineer.setDistance(p.getDistance()-WarEngineer.DISTANCE_OF_VIEW);
+					engineer.getBrain().setHeading(p.getAngle());
+					
+					SeDirigerVersNourriture nvTache=new SeDirigerVersNourriture(engineer);
+					engineer.setTacheCourante(nvTache);
 				}
-				engineer.getBrain().setRandomHeading(10);
+				else {
+					engineer.getBrain().setRandomHeading(10);
+				}
+				
 				engineer.setToReturn(WarEngineer.ACTION_MOVE);
 			}
 		}
