@@ -29,7 +29,7 @@ public class Constants {
 	// Constantes kamikazes
 	
 	public static final int vieMaxAvantSuicide = (int) (WarKamikaze.MAX_HEALTH * 0.3);	// S'il est attaqué et en dessous du seuil
-	public static final int DISTANCE_MAX_KAMIKAZE_ATTAQUE_BASE = 1000;
+	public static final int DISTANCE_MAX_KAMIKAZE_ATTAQUE_BASE = 1500;
 	public static final int NB_MIN_ROCKETS_TO_KILL = 3;
 	public static final int NB_MIN_TURRET_TO_KILL = 2;
 	

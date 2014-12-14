@@ -79,7 +79,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	//Méthodes ---------------------------------------------------------------------------
 	@Override
 	public String action() {
-		// Develop behaviour here
 		
 		toReturn = null;
 		this.messages = getBrain().getMessages();
@@ -142,13 +141,11 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 				
 				// Si l'ennemi est dans notre champ de vision
 				if(p.getDistance()<=WarRocketLauncher.DISTANCE_OF_VIEW){
-					getBrain().setDebugStringColor(Color.green);
 					AttaquerEnnemi nvTache=new AttaquerEnnemi(this);
 					this.setTacheCourante(nvTache);
 				}
 				// Sinon si on est dans le rayon de défense
 				else if(p.getDistance() !=0 && p.getDistance()<=Constants.rayonDefenseBase){
-					getBrain().setDebugStringColor(Color.red);
 					this.setDistancePointOuAller(p.getDistance()-WarRocketLauncher.DISTANCE_OF_VIEW);
 					this.setSeDirigerVersUnPoint(true);
 					SeDirigerVers nvTache=new SeDirigerVers(this);
@@ -183,7 +180,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					getBrain().setHeading(p.getAngle());
 					setDistancePointOuAller(p.getDistance()-WarRocketLauncher.DISTANCE_OF_VIEW);
 					setSeDirigerVersUnPoint(true);
-					//setToReturn(WarRocketLauncher.ACTION_MOVE);
 					SeDirigerVers nvTache=new SeDirigerVers(this);
 					setTacheCourante(nvTache);
 				}
@@ -197,7 +193,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	private WarMessage getMessageAboutEnemyBase() {
 		for(WarMessage m : this.messages){
 			if(m.getMessage().equals(Constants.enemyBaseHere)){
-				//messageAboutEnemyBase=m;
 				return m;
 			}
 		}
