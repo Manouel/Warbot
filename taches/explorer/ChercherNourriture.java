@@ -7,6 +7,7 @@ import pepisha.WarExplorerBrainController;
 import pepisha.taches.TacheAgent;
 import edu.turtlekit3.warbot.agents.ControllableWarAgent;
 import edu.turtlekit3.warbot.agents.MovableWarAgent;
+import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.WarBrainController;
@@ -52,13 +53,13 @@ public class ChercherNourriture extends TacheAgent {
 		// Si il y a de la nourriture dans notre champ de vision
 		if(nourriture != null && nourriture.size() > 0)
 		{			
-			WarPercept lePlusProche = nourriture.get(0); // le 0 est le plus proche normalement
+			WarPercept food = nourriture.get(0); // le 0 est le plus proche normalement
 			
-			if(lePlusProche.getDistance() <= ControllableWarAgent.MAX_DISTANCE_GIVE) {
+			if(food.getDistance() <= ControllableWarAgent.MAX_DISTANCE_GIVE) {
 				explorer.setDistanceLastFood(0);
 				explorer.setToReturn(MovableWarAgent.ACTION_TAKE);
 			} else {
-				explorer.getBrain().setHeading(lePlusProche.getAngle());
+				explorer.getBrain().setHeading(food.getAngle());
 				explorer.setToReturn(MovableWarAgent.ACTION_MOVE);
 			}
 			
@@ -75,7 +76,7 @@ public class ChercherNourriture extends TacheAgent {
 				if (food != null) {
 					CoordPolar p = explorer.getBrain().getIndirectPositionOfAgentWithMessage(food);
 					
-					explorer.setDistance(p.getDistance());
+					explorer.setDistance(p.getDistance() - WarExplorer.DISTANCE_OF_VIEW);
 					explorer.getBrain().setHeading(p.getAngle());
 				}
 				else {
@@ -83,7 +84,7 @@ public class ChercherNourriture extends TacheAgent {
 				}
 			}
 			else {
-				explorer.setDistance(explorer.getDistance()-1);
+				explorer.setDistance(explorer.getDistance() - WarExplorer.SPEED);
 			}
 			
 			explorer.setToReturn(MovableWarAgent.ACTION_MOVE);

@@ -51,6 +51,9 @@ public class Constants {
 	
 	// Constantes ingénieurs	
 	public static final int DISTANCE_MAX_INGENIEUR_ATTAQUE_BASE = 1000;
+	
+	// Constantes explorers espions
+	public static final int NB_PAS_LOCALISATION = 30;
 }
 
 

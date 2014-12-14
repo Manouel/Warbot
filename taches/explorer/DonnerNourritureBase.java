@@ -20,30 +20,28 @@ public class DonnerNourritureBase extends TacheAgent {
 		WarExplorerBrainController explorer = (WarExplorerBrainController) typeAgent;
 		
 		// Si mon sac est vide, on arrête de donner
-		if(explorer.getBrain().isBagEmpty())
-		{
+		if(explorer.getBrain().isBagEmpty()) {
 			explorer.getBrain().setHeading(explorer.getBrain().getHeading() + 180);
+			
 			if (explorer.getDistanceLastFood() > 0){
 				explorer.setTacheCourante(new RevenirDerniereNourriture(typeAgent));
 			} else {
 				explorer.setTacheCourante(new ChercherNourriture(typeAgent));
 			}
+		}
+		else {
+			ArrayList<WarPercept> bases = explorer.getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
 			
-			return;
+			if (bases == null || bases.size() == 0 || bases.get(0).getDistance() > MovableWarAgent.MAX_DISTANCE_GIVE){
+				explorer.setTacheCourante(new RetournerNourriture(typeAgent));
+			}
+			else{
+				WarPercept base = bases.get(0);
+				
+				explorer.getBrain().setIdNextAgentToGive(base.getID());
+				explorer.setToReturn(MovableWarAgent.ACTION_GIVE);	
+			}
 		}
-		
-		ArrayList<WarPercept> bases = explorer.getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
-		
-		if (bases == null | bases.size() == 0 || bases.get(0).getDistance() > MovableWarAgent.MAX_DISTANCE_GIVE){
-			explorer.setTacheCourante(new RetournerNourriture(typeAgent));
-		}
-		else{
-			WarPercept base = bases.get(0);
-			
-			explorer.getBrain().setIdNextAgentToGive(base.getID());
-			explorer.setToReturn(MovableWarAgent.ACTION_GIVE);	
-		}
-
 	}
 
 	@Override

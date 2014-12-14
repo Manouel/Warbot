@@ -8,18 +8,17 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.WarBrainController;
 import edu.turtlekit3.warbot.tools.CoordPolar;
+import pepisha.Constants;
 import pepisha.WarExplorerBrainController;
 import pepisha.taches.TacheAgent;
 
 public class LocaliserBase extends TacheAgent
-{
-	private static final int NB_PAS_LOCALISATION = 30;
-	
+{	
 	private double nbPasRestants;
 	
 	public LocaliserBase(WarBrainController b) {
 		super(b);
-		nbPasRestants = NB_PAS_LOCALISATION;
+		nbPasRestants = Constants.NB_PAS_LOCALISATION;
 	}
 
 	@Override
@@ -30,7 +29,7 @@ public class LocaliserBase extends TacheAgent
 			nbPasRestants -= WarExplorer.SPEED;
 		}
 		else {
-			nbPasRestants = NB_PAS_LOCALISATION;
+			nbPasRestants = Constants.NB_PAS_LOCALISATION;
 			explorer.getBrain().setHeading(explorer.getBrain().getHeading() + 180);
 		}
 		

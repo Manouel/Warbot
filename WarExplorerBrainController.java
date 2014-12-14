@@ -35,12 +35,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	// Mode de l'explorer
 	private boolean cueilleur;
 	
-	// Nombre de cueilleurs
-	//private static int nbCueilleurs = 0;
-	
-	// Nombre d'espions
-	private static int nbEspions = 0;
-	
+	// Pour revenir vers la nourriture (chemin)
 	private double distanceLastFood;
 	
 	// Liste de messages
@@ -52,8 +47,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	 */
 	public WarExplorerBrainController() {
 		super();
-			tacheCourante = new ChercherNourriture(this);
-			cueilleur = true;
+		tacheCourante = new ChercherNourriture(this);
+		cueilleur = true;
 	}
 		
 	
@@ -116,10 +111,9 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 		if(toReturn == null) {
 			return WarExplorer.ACTION_MOVE;
-		} 
-		else {
-			return toReturn;
 		}
+		
+		return toReturn;
 	}
 	
 	
@@ -150,7 +144,6 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 				if (!cueilleur) {
 					cueilleur = true;
 					tacheCourante = new ChercherNourriture(this);
-
 				}
 			}
 			else if (m.getMessage().equals(Constants.noEspion)) {
@@ -177,7 +170,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	
 	
 	/**
-	 * @action Envoie un message à sa base et aux rockets launcher s'il perçoit la base ennemie
+	 * @action Envoie un message aux autres agents s'il perçoit la base ennemie
 	 */
 	private void perceptEnemyBase()
 	{

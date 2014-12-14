@@ -20,7 +20,7 @@ public class RetournerNourriture extends TacheAgent {
 	}
 	
 	/**
-	 * @action Récupère les messages reçus provenants des bases
+	 * @action Récupère les messages reçus provenant des bases
 	 */
 	private WarMessage getMessageFromBase()
 	{
@@ -32,7 +32,6 @@ public class RetournerNourriture extends TacheAgent {
 				return m;
 		}
 		
-		explorer.getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.whereAreYou, "");
 		return null;
 	}
 
@@ -47,18 +46,18 @@ public class RetournerNourriture extends TacheAgent {
 		ArrayList<WarPercept> bases = explorer.getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
 		
 		// Si pas de base dans champ de vision
-		if (bases == null | bases.size() == 0)
+		if (bases == null || bases.size() == 0)
 		{
 			WarMessage m = getMessageFromBase();
 			
-			if (m != null)
-			{
+			if (m != null) {
 				explorer.getBrain().setHeading(m.getAngle());
 			}
-			
-			// J'envoie un message aux bases pour savoir où elles sont
-			explorer.getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.whereAreYou, (String[]) null);
-			
+			else {
+				// J'envoie un message aux bases pour savoir où elles sont
+				explorer.getBrain().broadcastMessageToAgentType(WarAgentType.WarBase, Constants.whereAreYou, "");
+			}
+
 			explorer.setToReturn(MovableWarAgent.ACTION_MOVE);
 		}
 		else		// On voit une base
@@ -68,7 +67,6 @@ public class RetournerNourriture extends TacheAgent {
 			// Si la base est assez proche pour qu'on lui donne
 			if (base.getDistance() <= MovableWarAgent.MAX_DISTANCE_GIVE) {
 				explorer.setTacheCourante(new DonnerNourritureBase(typeAgent));
-				return;
 			}
 			else {		// Si elle est trop loin, on se dirige vers elle
 				explorer.getBrain().setHeading(base.getAngle());
