@@ -29,7 +29,7 @@ public class AttendreCreation extends TacheAgent
 			ArrayList<WarPercept> bases = engineer.getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
 			
 			// On teste les percepts de base ennemie
-			if (bases != null && bases.size() > 0){
+			if (bases != null && bases.size() > 0 && bases.get(0).getDistance() <= WarTurret.DISTANCE_OF_VIEW){
 				engineer.setTacheCourante(new CreerTourelle(engineer));
 			}
 		}

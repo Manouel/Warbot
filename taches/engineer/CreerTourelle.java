@@ -72,7 +72,7 @@ public class CreerTourelle extends TacheAgent {
 					
 					if (p.getDistance() < DISTANCE_MAX_ATTAQUE_BASE) {
 						engineer.getBrain().setHeading(p.getAngle());
-						engineer.setDistance(p.getDistance() - WarEngineer.DISTANCE_OF_VIEW);
+						engineer.setDistance(p.getDistance() - WarTurret.DISTANCE_OF_VIEW);
 						engineer.setTacheCourante(new AttendreCreation(engineer));
 						engineer.setToReturn(WarEngineer.ACTION_MOVE);
 					}

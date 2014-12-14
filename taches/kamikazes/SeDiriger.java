@@ -15,12 +15,10 @@ public class SeDiriger extends TacheAgent{
 
 	public SeDiriger(WarBrainController b) {
 		super(b);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void exec() {
-		// TODO Auto-generated method stub
 		WarKamikazeBrainController kamikaze=(WarKamikazeBrainController)typeAgent;
 		
 		//Si seDirigerVersPoint et vrai
@@ -32,10 +30,8 @@ public class SeDiriger extends TacheAgent{
 				kamikaze.getBrain().setDebugStringColor(Color.green);
 				SeSuicider nvTache=new SeSuicider(kamikaze);
 				kamikaze.setTacheCourante(nvTache);
-				//Sinon on avance
-			}else{
-				kamikaze.setDistancePoinOuAller(
-						kamikaze.getDistancePointOuAller()-WarKamikaze.SPEED);
+			}else{ //Sinon on avance
+				kamikaze.setDistancePoinOuAller(kamikaze.getDistancePointOuAller()-WarKamikaze.SPEED);
 				kamikaze.setToReturn(WarKamikaze.ACTION_MOVE);
 			}
 		}

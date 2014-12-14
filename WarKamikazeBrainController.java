@@ -118,7 +118,7 @@ public class WarKamikazeBrainController extends WarKamikazeAbstractBrainControll
 	}
 	
 	/**
-	 * @action recharge 
+	 * @action recharge
 	 * */
 	private void recharger(){
 		if(!getBrain().isReloaded() && !getBrain().isReloading()){
@@ -131,18 +131,18 @@ public class WarKamikazeBrainController extends WarKamikazeAbstractBrainControll
 	}
 	
 	/**
-	 * @action Si le kamikaze est attaqué et 
+	 * @action Si le kamikaze est attaqué et qu'il n'a plus beaucoup de vie, il se suicide sur l'attaquant
 	 */
 	private void seDefendre() {
 		
 		// Si on va mourir
-		if(getBrain().getHealth() < (WarKamikaze.MAX_HEALTH * 0.3) && perdVie()){
+		if(getBrain().getHealth() < Constants.vieMaxAvantSuicide && perdVie()){
 			
 			// On tire sur l'ennemi perçu
 			ArrayList<WarPercept> ennemis = getBrain().getPerceptsEnemies();
 			if(getBrain().isReloaded() && ennemis != null && ennemis.size() > 0) {
 				getBrain().setHeading(ennemis.get(0).getAngle());
-				setToReturn(WarKamikaze.ACTION_FIRE);
+				toReturn = WarKamikaze.ACTION_FIRE;
 			}
 		}	
 	}

@@ -1,5 +1,6 @@
 package pepisha;
 
+import edu.turtlekit3.warbot.agents.agents.WarKamikaze;
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 
 public class Constants {
@@ -23,6 +24,13 @@ public class Constants {
 	public static final double rayonAttaqueBaseEnnemie = 500;
 	public static final double rayonDefenseBase = 500;
 	public static final double rayonAttaqueEnnemi = 400;//Rayon dans lequel on attaque les ennemis
+	
+	// Constantes kamikazes
+	
+	public static final int vieMaxAvantSuicide = (int) (WarKamikaze.MAX_HEALTH * 0.3);	// S'il est attaqué et en dessous du seuil
+	public static final int DISTANCE_MAX_ATTAQUE_BASE = 1000;
+	public static final int NB_MIN_ROCKETS_TO_KILL = 3;
+	public static final int NB_MIN_TURRET_TO_KILL = 2;
 	
 	//Nombre minimal d'agents de chaque type :
 	public static final int nbMinRocket=5;

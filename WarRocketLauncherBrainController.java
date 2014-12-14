@@ -7,8 +7,9 @@ import pepisha.taches.TacheAgent;
 import pepisha.taches.rocketLauncher.AttaquerEnnemi;
 import pepisha.taches.rocketLauncher.ChercherEnnemi;
 import pepisha.taches.rocketLauncher.SeDirigerVers;
-
+import edu.turtlekit3.warbot.agents.agents.WarEngineer;
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
+import edu.turtlekit3.warbot.agents.agents.WarTurret;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarRocketLauncherAbstractBrainController;
@@ -120,7 +121,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	private void isBaseAttacked(){
 		for(WarMessage m : this.messages){
 			
-			if(m.getMessage().equals(Constants.baseIsAttack)){	
+			if(m.getMessage().equals(Constants.baseIsAttack)){
 				
 				CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
 				
@@ -150,25 +151,24 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	 * (si on a un message à propose de la base ennemie et qu'elle est dans le rayon d'attaque)
 	 * */
 	private void attackEnemyBase(){
-		WarMessage m=getMessageAboutEnemyBase();
-		if(m!= null) {
-			CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
-			
-			if(p.getDistance()<=Constants.rayonAttaqueBaseEnnemie){
+		
+		//On vérifie qu'on n'a pas déjà une base ennemie dans les percepts
+		ArrayList<WarPercept> bases = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
+		
+		if (bases != null && bases.size() > 0){
+			getBrain().setHeading(bases.get(0).getAngle());
+			AttaquerEnnemi nvTache=new AttaquerEnnemi(this);
+			setTacheCourante(nvTache);
+		}
+		else{
+			WarMessage m=getMessageAboutEnemyBase();
+			if(m!= null) {
+				CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
 				
-				// On s'oriente vers la base
-				getBrain().setHeading(p.getAngle());
-				
-				//On vérifie qu'on n'a pas déjà une base ennemie dans les percepts
-				ArrayList<WarPercept> bases = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
-				
-				if (bases != null && bases.size() > 0){
-					AttaquerEnnemi nvTache=new AttaquerEnnemi(this);
-					setTacheCourante(nvTache);
-				}
-				
-				//Sinon on se dirige vers la base ennemie
-				else{
+				if(p.getDistance()<=Constants.rayonAttaqueBaseEnnemie){
+					
+					//On se dirige vers la base ennemie
+					getBrain().setHeading(p.getAngle());
 					setDistancePointOuAller(p.getDistance()-WarRocketLauncher.DISTANCE_OF_VIEW);
 					setSeDirigerVersUnPoint(true);
 					//setToReturn(WarRocketLauncher.ACTION_MOVE);
