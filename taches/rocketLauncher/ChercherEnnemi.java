@@ -1,6 +1,5 @@
 package pepisha.taches.rocketLauncher;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -54,7 +53,6 @@ public class ChercherEnnemi extends TacheAgent{
 			else{		// Sinon on cherche
 				if(rocket.getBrain().getHealth()<rocket.getVie()){
 					rocket.getBrain().setHeading(rocket.getBrain().getHeading()+180);
-					System.out.println("se retourne !!");
 				}
 				else{
 					double angle = rocket.getBrain().getHeading() + new Random().nextInt(10) - new Random().nextInt(10);
