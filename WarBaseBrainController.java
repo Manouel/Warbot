@@ -13,6 +13,7 @@ import java.util.Set;
 
 
 
+
 import pepisha.taches.TacheAgent;
 import pepisha.taches.base.CreerUnite;
 import edu.turtlekit3.warbot.agents.agents.WarBase;
@@ -45,18 +46,19 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	
 	
 	
-	
 	/**
 	 * Constructeur
 	 */
 	public WarBaseBrainController() {
 		super();
 		tacheCourante=new CreerUnite(this);
+		
 		explorersEspions=new HashMap<Integer,Integer>();
 		explorersCueilleurs=new HashMap<Integer,Integer>();
 		rocketLaunchers=new HashMap<Integer,Integer>();
 		engineers=new HashMap<Integer,Integer>();
 		kamikazes=new HashMap<Integer,Integer>();
+		
 		basesEnnemies=new ArrayList<CoordPolar>();
 	}
 
@@ -134,6 +136,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		
 		giveMyPosition();
 		healMySelf();
+		
 		verifierListesAgents();
 		verifierNombreExplorersEspions();
 		verifierNombreExplorersCueilleurs();
@@ -208,13 +211,10 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		if(toReturn != null)
 			return;
 		
-		if(getBrain().isBagEmpty())
-			return;
-		
-		if(getBrain().getHealth() <= WarBase.MAX_HEALTH - WarFood.HEALTH_GIVEN)
-			toReturn = WarBase.ACTION_EAT;
-		
-		
+		if(!getBrain().isBagEmpty()) {
+			if(getBrain().getHealth() <= WarBase.MAX_HEALTH - WarFood.HEALTH_GIVEN)
+				toReturn = WarBase.ACTION_EAT;
+		}
 	}
 
 
@@ -237,8 +237,12 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	 * @action demande un espion si plus d'espions
 	 * */
 	private void verifierNombreExplorersEspions(){
-		if(getNbExplorersEspions()==0 && getNbExplorerCueilleurs()>2){
-			getBrain().sendMessage(explorersCueilleurs.keySet().iterator().next(), Constants.noEspion);
+		if(getNbExplorersEspions()==0 && getNbExplorerCueilleurs()>Constants.nbMinExplorer){
+			Iterator<Integer> it = explorersCueilleurs.keySet().iterator();
+			
+			if(it.hasNext()) {
+				getBrain().sendMessage(it.next(), Constants.noEspion);
+			}
 		}
 	}
 	
@@ -246,8 +250,12 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	 * @action demande un cueilleur si moins de deux cueilleurs
 	 * */
 	private void verifierNombreExplorersCueilleurs(){
-		if(getNbExplorerCueilleurs()<2){
-			getBrain().sendMessage(explorersEspions.keySet().iterator().next(), "cueille");
+		if(getNbExplorersEspions()>0 && getNbExplorerCueilleurs()<Constants.nbMinExplorer){
+			Iterator<Integer> it = explorersEspions.keySet().iterator();
+			
+			if(it.hasNext()){
+				getBrain().sendMessage(it.next(), "cueille");
+			}
 		}
 	}
 	
@@ -258,15 +266,17 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 	private void verifierListesAgents(){
 		
 		//Explorers ------------------------------------
+		
 		//Explorers cueilleurs ----------------
 		Set<Integer> listeCles = explorersCueilleurs.keySet();
 			//Je décrémente tout
 		for(Integer cle : listeCles){
 			explorersCueilleurs.put(cle,explorersCueilleurs.get(cle)-1);
 		}
+		
 		//Explorers espions ------------------
 		listeCles = explorersEspions.keySet();
-		//Je décrémente tout
+			//Je décrémente tout
 		for(Integer cle : listeCles){
 			explorersEspions.put(cle,explorersEspions.get(cle)-1);
 		}
@@ -292,8 +302,11 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 			kamikazes.put(cle,kamikazes.get(cle)-1);
 		}
 		
+		
+		//On remet à 3 ce qui envoient un message imAlive
 		for(WarMessage msg : messages){
 			if(msg.getMessage().equals(Constants.imAlive)){
+				
 				if(msg.getSenderType().equals(WarAgentType.WarExplorer)){
 					if(msg.getContent()[0].equals("c")){
 						explorersCueilleurs.put(msg.getSenderID(), 3);
@@ -303,13 +316,13 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 					}
 					
 				}
-				if(msg.getSenderType().equals(WarAgentType.WarRocketLauncher)){
+				else if(msg.getSenderType().equals(WarAgentType.WarRocketLauncher)){
 					rocketLaunchers.put(msg.getSenderID(), 3);
 				}
-				if(msg.getSenderType().equals(WarAgentType.WarEngineer)){
+				else if(msg.getSenderType().equals(WarAgentType.WarEngineer)){
 					engineers.put(msg.getSenderID(), 3);
 				}
-				if(msg.getSenderType().equals(WarAgentType.WarKamikaze)){
+				else if(msg.getSenderType().equals(WarAgentType.WarKamikaze)){
 					kamikazes.put(msg.getSenderID(), 3);
 				}
 			}
@@ -326,7 +339,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController
 		
 		//Explorers ---------------------------------
 		//Explorers cueilleurs----------
-		Iterator it = explorersCueilleurs.keySet().iterator();
+		Iterator<Integer> it = explorersCueilleurs.keySet().iterator();
 		
 		while (it.hasNext()){
 			Integer cle = (Integer) it.next();

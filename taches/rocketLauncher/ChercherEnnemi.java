@@ -84,7 +84,7 @@ public class ChercherEnnemi extends TacheAgent{
 	private WarMessage getFormatedMessageAboutEnemyTankToKill() {
 		WarRocketLauncherBrainController rocket=(WarRocketLauncherBrainController)typeAgent;
 		for (WarMessage m : rocket.getMessages()) {
-			if(m.getMessage().equals(Constants.ennemyHere) && m.getContent() != null && m.getContent().length == 2 && m.getDistance()<=rocket.getRayonAttaqueBaseEnnemie()){
+			if(m.getMessage().equals(Constants.ennemyHere) && m.getContent() != null && m.getContent().length == 2 && m.getDistance()<=Constants.rayonAttaqueBaseEnnemie){
 				return m;
 			}
 		}
@@ -95,7 +95,7 @@ public class ChercherEnnemi extends TacheAgent{
 				WarRocketLauncherBrainController rocket=(WarRocketLauncherBrainController)typeAgent;
 				for(WarMessage m : rocket.getMessages()){
 					//Si le message parle de la base et que je suis assez près 
-					if(m.getMessage().equals(Constants.enemyBaseHere) && m.getDistance()<=rocket.getRayonAttaqueBaseEnnemie()){
+					if(m.getMessage().equals(Constants.enemyBaseHere) && m.getDistance()<=Constants.rayonAttaqueBaseEnnemie){
 		 				return m;
 		 			}
 				}

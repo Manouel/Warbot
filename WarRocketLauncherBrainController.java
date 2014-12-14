@@ -25,18 +25,14 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	private boolean seDirigerVersPoint=false; //Si true, on se dirige vers le pt poinOuAller
 	private double distancePointOuAller;
 	
-	private static final double rayonAttaqueBaseEnnemie = 500;
-	private static final double rayonDefenseBase = 500;
-	private static final double rayonAttaqueEnnemi = 400;//Rayon dans lequel on attaque les ennemis
-	
-	public static WarMessage messageAboutEnemyBase;
+	//public static WarMessage messageAboutEnemyBase;
 
 	ArrayList<WarMessage> messages;
 	
 	public WarRocketLauncherBrainController() {
 		super();
 		tacheCourante=new ChercherEnnemi(this);
-		messageAboutEnemyBase=null;
+		//messageAboutEnemyBase=null;
 	}
 	
 	//Accesseurs ----------------------------------------------------------------------------
@@ -67,18 +63,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		seDirigerVersPoint=val;
 	}
 	
-	public double getRayonAttaqueEnnemi(){
-		return rayonAttaqueEnnemi;
-	}
-	
-	public double getRayonAttaqueBaseEnnemie(){
-		return rayonAttaqueBaseEnnemie;
-	}
-	
-	public double getRayonDefenseBase(){
-		return rayonDefenseBase;
-	}
-	
 
 	//Méthodes ---------------------------------------------------------------------------
 	@Override
@@ -87,13 +71,11 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		
 		toReturn = null;
 		this.messages = getBrain().getMessages();
+		
 		doReflex();
 		
 		if (getBrain().isBlocked()){
 			getBrain().setRandomHeading();
-			//ChercherEnnemi nvTache=new ChercherEnnemi(this);
-			
-			//this.setTacheCourante(nvTache);
 		}
 		
 		this.getBrain().setDebugString(tacheCourante.toString());
@@ -102,8 +84,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			tacheCourante.exec();
 		}
 		if(toReturn == null){
-			//if (getBrain().isBlocked())
-			//	getBrain().setRandomHeading();
 			toReturn = WarRocketLauncher.ACTION_MOVE;
 		}
 		
@@ -115,11 +95,11 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	 * */
 	private void doReflex(){
 		imAlive();
-		recharger();
-		getMessageAboutEnemyBase();
-		isBaseAttacked() ;
-		attackEnemyBase();
 		perceptFood();
+		recharger();
+
+		isBaseAttacked();			// Défense de notre base
+		attackEnemyBase();			// Attaque de la base ennemie
 	}
 	
 	
@@ -135,24 +115,29 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 	
 	/**
-	 * @return true si une base alliée est attaquée et a envoyé un message signalant qu'elle a été attaquée
+	 * @action Défend la base si elle a a envoyé un message signalant qu'elle a été attaquée
 	 * */
 	private void isBaseAttacked(){
 		for(WarMessage m : this.messages){
 			
 			if(m.getMessage().equals(Constants.baseIsAttack)){	
 				
-
-				if(m.getDistance()==0 || m.getDistance()<=WarRocketLauncher.DISTANCE_OF_VIEW){
+				CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
+				
+				// On s'oriente vers l'ennemi
+				getBrain().setHeading(p.getAngle());
+				
+				// Si l'ennemi est dans notre champ de vision
+				if(p.getDistance()<=WarRocketLauncher.DISTANCE_OF_VIEW){
 					getBrain().setDebugStringColor(Color.green);
 					AttaquerEnnemi nvTache=new AttaquerEnnemi(this);
 					this.setTacheCourante(nvTache);
 				}
-				else if(m.getDistance() !=0 && m.getDistance()<=rayonDefenseBase){
+				// Sinon si on est dans le rayon de défense
+				else if(p.getDistance() !=0 && p.getDistance()<=Constants.rayonDefenseBase){
 					getBrain().setDebugStringColor(Color.red);
-					this.setDistancePointOuAller(m.getAngle()-WarRocketLauncher.DISTANCE_OF_VIEW);
+					this.setDistancePointOuAller(p.getDistance()-WarRocketLauncher.DISTANCE_OF_VIEW);
 					this.setSeDirigerVersUnPoint(true);
-					this.getBrain().setHeading(m.getAngle());
 					SeDirigerVers nvTache=new SeDirigerVers(this);
 					this.setTacheCourante(nvTache);
 				}		
@@ -166,37 +151,30 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	 * */
 	private void attackEnemyBase(){
 		WarMessage m=getMessageAboutEnemyBase();
-		if(m!= null && m.getDistance()<=rayonAttaqueBaseEnnemie){
+		if(m!= null) {
+			CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
 			
-			
-			//On vérifie qu'on n'a pas déjà une base ennemie dans les percepts
-			ArrayList<WarPercept> percept = getBrain().getPerceptsEnemies();
-			boolean base=false;
-			if(percept != null && percept.size() > 0){
+			if(p.getDistance()<=Constants.rayonAttaqueBaseEnnemie){
 				
-				for(int i=0;i<percept.size();i++){
-					if(percept.get(i).getType().equals(WarAgentType.WarBase)){
-						base =true;
-						
-					}
-				}
-			}
-			
-			//Si on a déjà une base ennemie dans les percepts, on attaque
-			if(base){
-				AttaquerEnnemi nvTache=new AttaquerEnnemi(this);
-				setTacheCourante(nvTache);
-			}
-			
-			//Sinon on se dirige vers la base ennemie
-			else{
-				CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
-				setDistancePointOuAller(p.getDistance()-WarRocketLauncher.DISTANCE_OF_VIEW);
-				setSeDirigerVersUnPoint(true);
+				// On s'oriente vers la base
 				getBrain().setHeading(p.getAngle());
-				setToReturn(WarRocketLauncher.ACTION_MOVE);
-				SeDirigerVers nvTache=new SeDirigerVers(this);
-				setTacheCourante(nvTache);
+				
+				//On vérifie qu'on n'a pas déjà une base ennemie dans les percepts
+				ArrayList<WarPercept> bases = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
+				
+				if (bases != null && bases.size() > 0){
+					AttaquerEnnemi nvTache=new AttaquerEnnemi(this);
+					setTacheCourante(nvTache);
+				}
+				
+				//Sinon on se dirige vers la base ennemie
+				else{
+					setDistancePointOuAller(p.getDistance()-WarRocketLauncher.DISTANCE_OF_VIEW);
+					setSeDirigerVersUnPoint(true);
+					//setToReturn(WarRocketLauncher.ACTION_MOVE);
+					SeDirigerVers nvTache=new SeDirigerVers(this);
+					setTacheCourante(nvTache);
+				}
 			}
 		}
 	}
@@ -207,7 +185,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	private WarMessage getMessageAboutEnemyBase() {
 		for(WarMessage m : this.messages){
 			if(m.getMessage().equals(Constants.enemyBaseHere)){
-				messageAboutEnemyBase=m;
+				//messageAboutEnemyBase=m;
 				return m;
 			}
 		}

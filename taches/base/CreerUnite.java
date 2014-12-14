@@ -16,19 +16,20 @@ public class CreerUnite extends TacheAgent{
 	private static final int MIN_HEATH_TO_CREATE = (int) (WarBase.MAX_HEALTH * 0.8);
 	
 	//type du dernier agent créé
-	private static WarAgentType lastCreatedUnit=WarAgentType.WarExplorer;
+	private WarAgentType lastCreatedUnit;
 	
 	
 	public CreerUnite(WarBrainController b){
 		super((WarBaseBrainController)b);
+		lastCreatedUnit=WarAgentType.WarExplorer;
 	}
 
 	@Override
 	public void exec() {
 		WarBaseBrainController base=(WarBaseBrainController)typeAgent;
+		
 		if(base.getBrain().getHealth()>MIN_HEATH_TO_CREATE)
 		{
-			
 			//si nbExplorers<nbMinExplorers
 			if(base.getNbExplorer()<Constants.nbMinExplorer){
 				lastCreatedUnit=WarAgentType.WarExplorer;
@@ -50,12 +51,13 @@ public class CreerUnite extends TacheAgent{
 			else {
 				//si nbAgents > nbDeuxiemeEngineer
 				if(base.getNbTotalAgents()>Constants.nbDeuxiemeEngineer
-						&& Constants.nbMaxEngineer>base.getNbEngineer()){
+						&& base.getNbEngineer()<Constants.nbMaxEngineer){
 					base.getBrain().setDebugStringColor(Color.green);
 					lastCreatedUnit=WarAgentType.WarEngineer;
 				}
 				//Si nbExplorers<nbMaxExplorers
-				else{ if(base.getNbExplorer()<Constants.nbMaxExplorer){
+				else { 
+					if(base.getNbExplorer()<Constants.nbMaxExplorer){
 						//Si lastcreatedunit=kamikaze
 						if(lastCreatedUnit.equals(WarAgentType.WarKamikaze)){
 							lastCreatedUnit=WarAgentType.WarExplorer;
@@ -80,7 +82,6 @@ public class CreerUnite extends TacheAgent{
 						}
 					}
 				}
-			
 			}
 			
 			base.getBrain().setNextAgentToCreate(lastCreatedUnit);

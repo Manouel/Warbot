@@ -16,7 +16,7 @@ import pepisha.taches.rocketLauncher.SeDirigerVers;
 
 public class SeSuicider extends TacheAgent
 {
-	private static final int DISTANCE_MAX_ATTAQUE_BASE = 500;
+	private static final int DISTANCE_MAX_ATTAQUE_BASE = 1000;
 	private static final int NB_MIN_ROCKETS_TO_KILL = 3;
 	private static final int NB_MIN_TURRET_TO_KILL = 2;
 

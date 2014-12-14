@@ -10,14 +10,19 @@ public class Constants {
 	public static final String enemyTankHere = "enemyTankHere";
 	public static final String ennemyHere = "ennemyHere";
 	
+	public static final String foodHere = "foodHere";
+	public static final String imAlive = "imAlive";
+	
 	// Constantes base
 	
 	public static final String baseIsAttack = "baseIsAttack";
 	public static final String noEspion ="noEspion";
-	// Constantes explorer
 	
-	public static final String foodHere = "foodHere";
-	public static final String imAlive = "imAlive";
+	// Constantes rockets
+	
+	public static final double rayonAttaqueBaseEnnemie = 500;
+	public static final double rayonDefenseBase = 500;
+	public static final double rayonAttaqueEnnemi = 400;//Rayon dans lequel on attaque les ennemis
 	
 	//Nombre minimal d'agents de chaque type :
 	public static final int nbMinRocket=5;
