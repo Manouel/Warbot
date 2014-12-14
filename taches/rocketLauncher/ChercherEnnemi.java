@@ -52,14 +52,21 @@ public class ChercherEnnemi extends TacheAgent{
 				rocket.setTacheCourante(nvTache);
 			}
 			else{		// Sinon on cherche
-				double angle = rocket.getBrain().getHeading() + new Random().nextInt(10) - new Random().nextInt(10);
-				
-				rocket.getBrain().setHeading(angle);
+				if(rocket.getBrain().getHealth()<rocket.getVie()){
+					rocket.getBrain().setHeading(rocket.getBrain().getHeading()+180);
+					System.out.println("se retourne !!");
+				}
+				else{
+					double angle = rocket.getBrain().getHeading() + new Random().nextInt(10) - new Random().nextInt(10);
+					
+					rocket.getBrain().setHeading(angle);
+				}
 			}
 		}
 		
 		rocket.setToReturn(MovableWarAgent.ACTION_MOVE);
 	}
+
 
 	@Override
 	public String toString() {

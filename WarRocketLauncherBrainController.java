@@ -8,6 +8,7 @@ import pepisha.taches.rocketLauncher.AttaquerEnnemi;
 import pepisha.taches.rocketLauncher.ChercherEnnemi;
 import pepisha.taches.rocketLauncher.SeDirigerVers;
 import edu.turtlekit3.warbot.agents.agents.WarEngineer;
+import edu.turtlekit3.warbot.agents.agents.WarKamikaze;
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.agents.WarTurret;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
@@ -26,17 +27,27 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	private boolean seDirigerVersPoint=false; //Si true, on se dirige vers le pt poinOuAller
 	private double distancePointOuAller;
 	
-	//public static WarMessage messageAboutEnemyBase;
 
 	ArrayList<WarMessage> messages;
+	
+	// Vie précédente
+	private int vie;
+	
+	
+	//Constructeur ---------------------------------
 	
 	public WarRocketLauncherBrainController() {
 		super();
 		tacheCourante=new ChercherEnnemi(this);
+		vie = WarKamikaze.MAX_HEALTH;
 		//messageAboutEnemyBase=null;
 	}
 	
 	//Accesseurs ----------------------------------------------------------------------------
+	
+	public int getVie(){
+		return vie;
+	}
 	public void setToReturn(String nvReturn){
 		toReturn=nvReturn;
 	}
@@ -87,6 +98,8 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		if(toReturn == null){
 			toReturn = WarRocketLauncher.ACTION_MOVE;
 		}
+
+		vie = getBrain().getHealth();
 		
 		return toReturn;
 	}
@@ -98,7 +111,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		imAlive();
 		perceptFood();
 		recharger();
-
 		isBaseAttacked();			// Défense de notre base
 		attackEnemyBase();			// Attaque de la base ennemie
 	}
