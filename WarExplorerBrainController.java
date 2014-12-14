@@ -36,7 +36,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	private boolean cueilleur;
 	
 	// Nombre de cueilleurs
-	private static int nbCueilleurs = 0;
+	//private static int nbCueilleurs = 0;
 	
 	// Nombre d'espions
 	private static int nbEspions = 0;
@@ -52,19 +52,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	 */
 	public WarExplorerBrainController() {
 		super();
-		
-		// Si le nb de cueilleurs < min OU inférieur à 70% du nb d'explorers total
-		if (nbCueilleurs < Constants.nbMinExplorer || nbEspions >= 1) {
 			tacheCourante = new ChercherNourriture(this);
-			nbCueilleurs++;
 			cueilleur = true;
-		}
-		else {
-			tacheCourante = new ChercherEnnemis(this);
-			nbEspions++;
-			cueilleur = false;
-		}
 	}
+		
 	
 	public ArrayList<WarMessage> getListeMessages() {
 		return this.messages;
@@ -159,16 +150,13 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 				if (!cueilleur) {
 					cueilleur = true;
 					tacheCourante = new ChercherNourriture(this);
-					nbEspions--;
-					nbCueilleurs++;
+
 				}
 			}
 			else if (m.getMessage().equals(Constants.noEspion)) {
 				if (cueilleur) {
 					cueilleur = false;
 					tacheCourante = new ChercherEnnemis(this);
-					nbCueilleurs--;
-					nbEspions++;
 				}
 			}
 		}

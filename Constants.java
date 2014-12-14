@@ -44,6 +44,9 @@ public class Constants {
 	
 	//nb total d'agents à partir duquel on fait un deuxième engineer
 	public static final int nbDeuxiemeEngineer=10;
+	
+	//Constantes turrets
+	public static final int RAYON_NON_ATTAQUE_TURRET=17;
 }
 
 

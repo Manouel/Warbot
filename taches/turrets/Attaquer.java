@@ -22,18 +22,44 @@ public class Attaquer extends TacheAgent {
 	public void exec() {
 		WarTurretBrainController turret = (WarTurretBrainController) typeAgent;
 		
-		ArrayList<WarPercept> percept = turret.getBrain().getPerceptsEnemies();
-		if(percept != null && percept.size() > 0){	
-			
-			if(turret.getBrain().isReloaded()){
-				turret.getBrain().setHeading(percept.get(0).getAngle());
-				turret.setToReturn(WarRocketLauncher.ACTION_FIRE);
+		ArrayList<WarPercept> perceptsAllies=turret.getBrain().getPerceptsAllies();
+		ArrayList<WarPercept> perceptsEnnemis=turret.getBrain().getPerceptsEnemies();
+		
+		if(perceptsEnnemis !=null && perceptsEnnemis.size()>0){
+			for(WarPercept pAllie : perceptsAllies){
+				for(WarPercept pEnnemi : perceptsEnnemis){
+					if(pAllie.getAngle()-Constants.RAYON_NON_ATTAQUE_TURRET<pEnnemi.getAngle()
+							&& pAllie.getAngle()+Constants.RAYON_NON_ATTAQUE_TURRET>pEnnemi.getAngle()){
+						if(pAllie.getDistance()<pEnnemi.getDistance()){
+							turret.setToReturn(WarRocketLauncher.ACTION_IDLE);
+						}
+						
+					}
+					else{
+						turret.getBrain().setHeading(pEnnemi.getAngle());
+						turret.setToReturn(WarRocketLauncher.ACTION_FIRE);
+					}
+						
+				}
 			}
 		}
 		else{
 			Tourner nvTache=new Tourner(turret);
 			turret.setTacheCourante(nvTache);
 		}
+		
+//		ArrayList<WarPercept> percept = turret.getBrain().getPerceptsEnemies();
+//		if(percept != null && percept.size() > 0){	
+//			
+//			if(turret.getBrain().isReloaded()){
+//				turret.getBrain().setHeading(percept.get(0).getAngle());
+//				turret.setToReturn(WarRocketLauncher.ACTION_FIRE);
+//			}
+//		}
+//		else{
+//			Tourner nvTache=new Tourner(turret);
+//			turret.setTacheCourante(nvTache);
+//		}
 	}
 
 	@Override

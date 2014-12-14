@@ -129,7 +129,6 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
 			
 			if(!(tacheCourante.getClass().getSimpleName().equals("AttendreCreation"))){
-				System.out.println(tacheCourante.getClass().getSimpleName());
 				CreerTourelle nvTache=new CreerTourelle(this);
 				setTacheCourante(nvTache);
 			}
