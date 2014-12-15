@@ -31,7 +31,7 @@ public class AttaquerEnnemi extends TacheAgent{
 			rocket.getBrain().setDebugStringColor(Color.green);
 
 			//si je suis pas trop pres de l'enemy je m'approche
-			if(enemy.getDistance() > WarRocket.EXPLOSION_RADIUS + 1)
+			if(enemy.getDistance() > WarRocket.EXPLOSION_RADIUS + 5)
 				rocket.setToReturn(WarRocketLauncher.ACTION_MOVE);
 			else
 				rocket.setToReturn(WarRocketLauncher.ACTION_IDLE);
