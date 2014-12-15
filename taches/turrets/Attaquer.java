@@ -3,6 +3,7 @@ package pepisha.taches.turrets;
 import java.util.ArrayList;
 
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
+import edu.turtlekit3.warbot.agents.agents.WarTurret;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.agents.projectiles.WarRocket;
@@ -27,22 +28,43 @@ public class Attaquer extends TacheAgent {
 		
 		if(perceptsEnnemis !=null && perceptsEnnemis.size()>0){
 			if (perceptsAllies == null || perceptsAllies.size() == 0){
-				turret.getBrain().setHeading(perceptsEnnemis.get(0).getAngle());
-				turret.setToReturn(WarRocketLauncher.ACTION_FIRE);
+				ArrayList<WarPercept> perceptsBases=turret.getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
+				if(perceptsBases!=null && perceptsBases.size()>0){
+					turret.getBrain().setHeading(perceptsBases.get(0).getAngle());
+					turret.setToReturn(WarTurret.ACTION_FIRE);
+				}
+				else{
+					turret.getBrain().setHeading(perceptsEnnemis.get(0).getAngle());
+					turret.setToReturn(WarTurret.ACTION_FIRE);
+				}
 			}
 			else{
+				boolean quit=false;
 				for(WarPercept pAllie : perceptsAllies){
+					
 					for(WarPercept pEnnemi : perceptsEnnemis){
 						if(pAllie.getAngle()-Constants.RAYON_NON_ATTAQUE_TURRET<pEnnemi.getAngle()
 												&& pAllie.getAngle()+Constants.RAYON_NON_ATTAQUE_TURRET>pEnnemi.getAngle()
 												&& pAllie.getDistance()<pEnnemi.getDistance()){
-								turret.setToReturn(WarRocketLauncher.ACTION_IDLE);
+								turret.setToReturn(WarTurret.ACTION_IDLE);
 						}
 						else{
-							turret.getBrain().setHeading(pEnnemi.getAngle());
-							turret.setToReturn(WarRocketLauncher.ACTION_FIRE);
+							if(pEnnemi.getType().equals(WarAgentType.WarBase)){
+								
+								turret.getBrain().setHeading(pEnnemi.getAngle());
+								turret.setToReturn(WarTurret.ACTION_FIRE);
+								quit=true;
+								break;
+								
+							}else{
+								turret.getBrain().setHeading(pEnnemi.getAngle());
+								turret.setToReturn(WarTurret.ACTION_FIRE);
+							}
 						}
 							
+					}
+					if(quit){
+						break;
 					}
 				}
 			}
