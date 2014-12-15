@@ -11,6 +11,7 @@ public class Constants {
 	public static final String enemyBaseHere = "enemyBaseHere";
 	public static final String enemyTankHere = "enemyTankHere";
 	public static final String ennemyHere = "ennemyHere";
+	public static final String groupEnemyHere="groupEnemyHere";
 	
 	public static final String foodHere = "foodHere";
 	public static final String imAlive = "imAlive";
@@ -30,7 +31,7 @@ public class Constants {
 	
 	public static final int vieMaxAvantSuicide = (int) (WarKamikaze.MAX_HEALTH * 0.3);	// S'il est attaqué et en dessous du seuil
 	public static final int DISTANCE_MAX_KAMIKAZE_ATTAQUE_BASE = 1500;
-	public static final int NB_MIN_ROCKETS_TO_KILL = 3;
+	public static final int NB_MIN_ROCKETS_TO_KILL = 2;
 	public static final int NB_MIN_TURRET_TO_KILL = 2;
 	
 	//Nombre minimal d'agents de chaque type :
@@ -50,7 +51,7 @@ public class Constants {
 	public static final int RAYON_NON_ATTAQUE_TURRET=17;
 	
 	// Constantes ingénieurs	
-	public static final int DISTANCE_MAX_INGENIEUR_ATTAQUE_BASE = 1000;
+	public static final int DISTANCE_MAX_INGENIEUR_ATTAQUE_BASE = 1500;
 	
 	// Constantes explorers espions
 	public static final int NB_PAS_LOCALISATION = 30;

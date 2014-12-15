@@ -32,6 +32,22 @@ public class SeSuicider extends TacheAgent
 		
 		return null;
 	}
+	
+	/**
+	 * @action si le kamikaze n'est pas dans la tache se diriger vers, 
+	 * regarde s'il a reçu un message à propos d'un groupe d'ennemis et se dirige vers le point en question
+	 * */
+	private WarMessage getMessageAboutEnemyGroupHere(){
+		WarKamikazeBrainController kamikaze = (WarKamikazeBrainController) typeAgent;
+		
+		for(WarMessage m : kamikaze.getListeMessages()){
+			if(m.getMessage().equals(Constants.groupEnemyHere)){				
+				return m;
+			}
+		}
+		
+		return null;
+	}
 
 	@Override
 	public void exec() {
@@ -80,8 +96,19 @@ public class SeSuicider extends TacheAgent
 					kamikaze.getBrain().setHeading(tourelles.get(0).getAngle());
 					kamikaze.setToReturn(WarKamikaze.ACTION_FIRE);
 				}
-				else {	// Si pas de rockets ni tourelles, on cherche
-					kamikaze.getBrain().setRandomHeading(10);
+				else {
+					// On regarde si on a pas un message pour un groupe de tourelles ou rockets
+					WarMessage messageGroup = getMessageAboutEnemyGroupHere();
+					if (messageGroup != null) {
+						kamikaze.getBrain().setHeading(messageGroup.getAngle());
+						kamikaze.setSeDirigerVersPoint(true);
+						kamikaze.setDistancePoinOuAller(messageGroup.getDistance());
+						SeDiriger nvTache=new SeDiriger(kamikaze);
+						kamikaze.setTacheCourante(nvTache);
+					}
+					else {	// Si pas de rockets ni tourelles, on cherche
+						kamikaze.getBrain().setRandomHeading(10);
+					}
 					kamikaze.setToReturn(WarKamikaze.ACTION_MOVE);
 				}
 			}

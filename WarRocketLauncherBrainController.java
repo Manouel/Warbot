@@ -8,6 +8,7 @@ import pepisha.taches.rocketLauncher.AttaquerEnnemi;
 import pepisha.taches.rocketLauncher.ChercherEnnemi;
 import pepisha.taches.rocketLauncher.SeDirigerVers;
 import edu.turtlekit3.warbot.agents.agents.WarEngineer;
+import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.agents.agents.WarKamikaze;
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.agents.WarTurret;
@@ -79,7 +80,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	//Méthodes ---------------------------------------------------------------------------
 	@Override
 	public String action() {
-		
+				
 		toReturn = null;
 		this.messages = getBrain().getMessages();
 		
@@ -112,6 +113,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		recharger();
 		isBaseAttacked();			// Défense de notre base
 		attackEnemyBase();			// Attaque de la base ennemie
+		groupEnemyHere();
 	}
 	
 	
@@ -225,5 +227,20 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			getBrain().broadcastMessageToAgentType(WarAgentType.WarEngineer, Constants.foodHere,
 					String.valueOf(food.getDistance()), String.valueOf(food.getAngle()));
 		}
-	}	
+	}
+	
+	/**
+	 * @action si il y a un groupe d'ennemis dans les percepts du rocket, prévient le kamikaze
+	 * */
+	private void groupEnemyHere(){
+		ArrayList<WarPercept> ennemisTourelles = getBrain().getPerceptsEnemiesByType(WarAgentType.WarTurret);
+		ArrayList<WarPercept> ennemisRockets = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+		
+		if(ennemisRockets!=null && ennemisRockets.size()>=Constants.NB_MIN_ROCKETS_TO_KILL){
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarKamikaze, Constants.groupEnemyHere);
+		}
+		else if(ennemisTourelles!=null && ennemisTourelles.size()>=Constants.NB_MIN_TURRET_TO_KILL){
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarKamikaze,Constants.groupEnemyHere);
+		}
+	}
 }

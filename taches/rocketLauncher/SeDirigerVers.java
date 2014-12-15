@@ -37,7 +37,6 @@ public class SeDirigerVers extends TacheAgent{
 			rocket.setTacheCourante(nvTache);
 			rocket.setToReturn(WarRocketLauncher.ACTION_MOVE);
 		}
-		
 	}
 
 	@Override

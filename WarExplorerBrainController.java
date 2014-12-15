@@ -126,6 +126,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		
 		perceptEnemyBase();
 		
+		groupEnemyHere();
+		
 		perceptFood();
 		
 		imAlive();
@@ -189,6 +191,23 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 				setDistance(base.getDistance());
 				setTacheCourante(new LocaliserBase(this));
 			}
+		}
+	}
+	
+	
+	/**
+	 * @action S'il y a un groupe d'ennemis dans le percept, prévient le kamikaze
+	 */
+	private void groupEnemyHere()
+	{
+		ArrayList<WarPercept> ennemisTourelles = getBrain().getPerceptsEnemiesByType(WarAgentType.WarTurret);
+		ArrayList<WarPercept> ennemisRockets = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+		
+		if (ennemisRockets != null && ennemisRockets.size() >= Constants.NB_MIN_ROCKETS_TO_KILL){
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarKamikaze, Constants.groupEnemyHere);
+		}
+		else if (ennemisTourelles != null && ennemisTourelles.size() >= Constants.NB_MIN_TURRET_TO_KILL){
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarKamikaze, Constants.groupEnemyHere);
 		}
 	}
 	

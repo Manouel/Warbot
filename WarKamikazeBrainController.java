@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import pepisha.taches.TacheAgent;
+import pepisha.taches.kamikazes.SeDiriger;
 import pepisha.taches.kamikazes.SeSuicider;
 import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.agents.agents.WarKamikaze;

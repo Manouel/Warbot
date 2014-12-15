@@ -101,6 +101,7 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 	{
 		eatFood();
 		perceptEnemyBase();
+		groupEnemyHere();
 		imAlive();
 		perceptFood();
 	}
@@ -161,6 +162,23 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 			
 			// On envoie aux bases la position de la base ennemie
 			getBrain().broadcastMessageToAll(Constants.enemyBaseHere, String.valueOf(base.getDistance()), String.valueOf(base.getAngle()));
+		}
+	}
+	
+	
+	/**
+	 * @action S'il y a un groupe d'ennemis dans le percept, prévient le kamikaze
+	 */
+	private void groupEnemyHere()
+	{
+		ArrayList<WarPercept> ennemisTourelles = getBrain().getPerceptsEnemiesByType(WarAgentType.WarTurret);
+		ArrayList<WarPercept> ennemisRockets = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+		
+		if (ennemisRockets != null && ennemisRockets.size() >= Constants.NB_MIN_ROCKETS_TO_KILL){
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarKamikaze, Constants.groupEnemyHere);
+		}
+		else if (ennemisTourelles != null && ennemisTourelles.size() >= Constants.NB_MIN_TURRET_TO_KILL){
+			getBrain().broadcastMessageToAgentType(WarAgentType.WarKamikaze, Constants.groupEnemyHere);
 		}
 	}
 }
