@@ -26,18 +26,24 @@ public class Attaquer extends TacheAgent {
 		ArrayList<WarPercept> perceptsEnnemis=turret.getBrain().getPerceptsEnemies();
 		
 		if(perceptsEnnemis !=null && perceptsEnnemis.size()>0){
-			for(WarPercept pAllie : perceptsAllies){
-				for(WarPercept pEnnemi : perceptsEnnemis){
-					if(pAllie.getAngle()-Constants.RAYON_NON_ATTAQUE_TURRET<pEnnemi.getAngle()
-											&& pAllie.getAngle()+Constants.RAYON_NON_ATTAQUE_TURRET>pEnnemi.getAngle()
-											&& pAllie.getDistance()<pEnnemi.getDistance()){
-							turret.setToReturn(WarRocketLauncher.ACTION_IDLE);
+			if (perceptsAllies == null || perceptsAllies.size() == 0){
+				turret.getBrain().setHeading(perceptsEnnemis.get(0).getAngle());
+				turret.setToReturn(WarRocketLauncher.ACTION_FIRE);
+			}
+			else{
+				for(WarPercept pAllie : perceptsAllies){
+					for(WarPercept pEnnemi : perceptsEnnemis){
+						if(pAllie.getAngle()-Constants.RAYON_NON_ATTAQUE_TURRET<pEnnemi.getAngle()
+												&& pAllie.getAngle()+Constants.RAYON_NON_ATTAQUE_TURRET>pEnnemi.getAngle()
+												&& pAllie.getDistance()<pEnnemi.getDistance()){
+								turret.setToReturn(WarRocketLauncher.ACTION_IDLE);
+						}
+						else{
+							turret.getBrain().setHeading(pEnnemi.getAngle());
+							turret.setToReturn(WarRocketLauncher.ACTION_FIRE);
+						}
+							
 					}
-					else{
-						turret.getBrain().setHeading(pEnnemi.getAngle());
-						turret.setToReturn(WarRocketLauncher.ACTION_FIRE);
-					}
-						
 				}
 			}
 		}
